@@ -1,0 +1,23 @@
+{
+  "name": "blocks_fe",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "tsc": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.33.1",
+    "@typescript-eslint/parser": "^5.33.1",
+    "@vitejs/plugin-vue": "^3.0.3",
+    "eslint": "^8.22.0",
+    "eslint-plugin-vue": "^9.3.0",
+    "typescript": "^4.6.4",
+    "vite": "^3.0.7",
+    "vue": "^3.2.37",
+    "vue-tsc": "^0.39.5"
+  }
+}
