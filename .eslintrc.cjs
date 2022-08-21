@@ -38,5 +38,11 @@ module.exports = {
       },
     ],
     'vue/singleline-html-element-content-newline': 'off',
+    'vue/html-closing-bracket-spacing': [
+      'error',
+      {
+        selfClosingTag: 'never',
+      },
+    ],
   },
 }

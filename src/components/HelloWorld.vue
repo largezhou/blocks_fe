@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import BButton from '../components/b-components/button/index.vue'
 
 defineProps<{ msg: string }>()
 
@@ -10,7 +11,7 @@ const count = ref(0)
   <h1>{{ msg }}</h1>
 
   <div class="card">
-    <button type="button" @click="count++">count is {{ count }}</button>
+    <b-button :type="'primary'" :text="`count is ${count}`" @click="count++"/>
     <p>
       Edit
       <code>components/HelloWorld.vue</code> to test HMR
@@ -28,8 +29,10 @@ const count = ref(0)
   </p>
 </template>
 
-<style scoped>
-.read-the-docs {
-  color: #888;
+<style scoped lang="less">
+p {
+  &.read-the-docs {
+    color: #888;
+  }
 }
 </style>
