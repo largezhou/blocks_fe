@@ -1,0 +1,21 @@
+{
+  "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
+  "framework": "vue",
+  "name": "blocks_fe",
+  "version": "0.0.1",
+  "contributions": {
+    "html": {
+      "elements": [
+        {
+          "name": "ALayoutHeader"
+        },
+        {
+          "name": "ALayoutContent"
+        },
+        {
+          "name": "ALayoutFooter"
+        }
+      ]
+    }
+  }
+}

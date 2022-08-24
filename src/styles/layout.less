@@ -1,0 +1,41 @@
+// antd layout 的样式
+.layout {
+  min-height: 100%;
+}
+
+.sider {
+  overflow: auto;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.layout-main {
+  margin-left: 200px;
+}
+
+.header {
+  background: #fff;
+  padding: 0;
+}
+
+.content {
+  display: flex;
+  padding: 24px 16px 0 16px;
+  overflow: initial;
+  flex-direction: column;
+
+  > div {
+    flex-grow: 1;
+    padding: 24px;
+    background: #fff;
+  }
+}
+
+.footer {
+  letter-spacing: 5px;
+  font-weight: 400;
+  text-align: center;
+}

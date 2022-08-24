@@ -23,5 +23,6 @@
     "vite-plugin-svg-icons": "^2.0.1",
     "vue": "^3.2.37",
     "vue-tsc": "^0.39.5"
-  }
+  },
+  "web-types": "src/web-types.json"
 }
