@@ -3,6 +3,7 @@ import './style.less'
 import App from './App.vue'
 import Antd from 'ant-design-vue'
 import 'ant-design-vue/dist/antd.css'
+import 'virtual:svg-icons-register'
 
 const app = createApp(App)
 

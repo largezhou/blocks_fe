@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import BButton from '../components/b-components/button/index.vue'
+import BButton from '@/components/b-components/button/BButton.vue'
+import BSvgIcon from '@/components/svg-icon/BSvgIcon.vue'
 
 defineProps<{ msg: string }>()
 
@@ -11,7 +12,8 @@ const count = ref(0)
   <h1>{{ msg }}</h1>
 
   <div class="card">
-    <b-button :type="'primary'" :text="`count is ${count}`" @click="count++"/>
+    <BSvgIcon name="component-button"/>
+    <BButton :type="'primary'" :text="`count is ${count}`" @click="count++"/>
     <p>
       Edit
       <code>components/HelloWorld.vue</code> to test HMR
