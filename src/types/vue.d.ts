@@ -1,3 +1,5 @@
+import { DefineComponent } from 'vue'
+
 declare module '@vue/runtime-core' {
   interface ComponentCustomOptions {
     /**
@@ -23,4 +25,7 @@ declare module '@vue/runtime-core' {
   }
 }
 
-export {}
+/**
+ * 导入组件的类型，为什么会是这样？瞎试的呗，既能满足 IDE 的识别，也能通过 vue-tsc
+ */
+export type TComponent = DefineComponent<any, any, any, any, any, any, any, any>
