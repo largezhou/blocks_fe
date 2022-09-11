@@ -44,5 +44,6 @@ module.exports = {
         selfClosingTag: 'never',
       },
     ],
+    'vue/valid-template-root': 'off',
   },
 }

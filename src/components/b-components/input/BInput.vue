@@ -7,6 +7,7 @@ export default defineComponent({
   minWidthUnit: 3,
   minHeightUnit: 2,
   icon: 'input',
+  category: '输入',
 })
 </script>
 
@@ -33,8 +34,8 @@ withDefaults(
 
 <template>
   <div class="b-input ant-form ant-form-vertical">
-    <a-form-item :label="label" :extra="extra">
-      <a-input
+    <AFormItem :label="label" :extra="extra">
+      <AInput
         :value="value"
         :allow-clear="allowClear"
         :placeholder="placeholder"
@@ -42,7 +43,7 @@ withDefaults(
         :lebel="label"
         :extra="extra"
       />
-    </a-form-item>
+    </AFormItem>
   </div>
 </template>
 

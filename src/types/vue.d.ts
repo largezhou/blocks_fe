@@ -22,10 +22,18 @@ declare module '@vue/runtime-core' {
      * 组件展示的图标
      */
     icon?: string
+    /**
+     * 组件分类
+     */
+    category?: string
+  }
+
+  interface ComponentCustomProperties {
+    $log: typeof console.log
   }
 }
 
 /**
  * 导入组件的类型，为什么会是这样？瞎试的呗，既能满足 IDE 的识别，也能通过 vue-tsc
  */
-export type TComponent = DefineComponent<any, any, any, any, any, any, any, any>
+export type ComponentDefinition = DefineComponent<any, any, any, any, any, any, any, any>

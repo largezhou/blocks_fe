@@ -14,4 +14,5 @@ app.use(Antd)
 
 if (import.meta.env.VITE_ENV !== 'production') {
   window.vueApp = app
+  app.config.globalProperties.$log = console.log.bind(console)
 }

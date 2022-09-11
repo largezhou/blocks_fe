@@ -7,6 +7,7 @@ export default defineComponent({
   minWidthUnit: 1,
   minHeightUnit: 1,
   icon: 'button',
+  category: '通用',
 })
 </script>
 
@@ -36,7 +37,7 @@ const onClick = (e: MouseEvent) => {
 </script>
 
 <template>
-  <a-button
+  <AButton
     class="b-button"
     :type="type"
     :danger="danger"
@@ -44,7 +45,7 @@ const onClick = (e: MouseEvent) => {
     @click="onClick"
   >
     {{ text }}
-  </a-button>
+  </AButton>
 </template>
 
 <style lang="less">
