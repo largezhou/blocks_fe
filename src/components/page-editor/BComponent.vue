@@ -15,6 +15,7 @@ import { computed } from 'vue'
 
 const props = defineProps<{
   data: ComponentData
+  selectedId?: string
 }>()
 const hasUI = componentHasUi(props.data)
 const spaceStyles = computed(() => {
@@ -35,11 +36,13 @@ const spaceStyles = computed(() => {
     top: `${d.top}px`,
   }
 })
+const isSelected = computed(() => props.selectedId === props.data.id)
 </script>
 
 <template>
   <div
     class="b-component"
+    :class="{ 'b-selected': isSelected }"
     :style="spaceStyles"
   >
     <component

@@ -22,3 +22,8 @@ export const EDITOR_TOP = 112
 
 // 拖动时，鼠标指针相对于组件左上角的偏移
 export const DRAGGING_MOUSE_OFFSET = 10
+
+// 拖动时的动作类型
+export const MOVE_TYPE_MOVE = 'move'
+export const MOVE_TYPE_RESIZE = 'resize'
+export const MOVE_TYPE_NEW = 'new'

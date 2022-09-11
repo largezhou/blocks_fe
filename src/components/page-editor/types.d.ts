@@ -1,3 +1,5 @@
+import  { MOVE_TYPE_MOVE, MOVE_TYPE_RESIZE, MOVE_TYPE_NEW } from '@/libs/consts'
+
 // 位置
 export interface Position {
   left: number
@@ -24,3 +26,5 @@ export type ComponentData = {
   // 图标，没有 UI 的组件，在编辑器里展示为图标
   icon?: string
 } & Space
+
+export type MovingType = MOVE_TYPE_MOVE | MOVE_TYPE_RESIZE | MOVE_TYPE_NEW | null

@@ -9,52 +9,67 @@ export default defineComponent({
 <script setup lang="ts">
 import { componentHasUi, groupComponents } from '@/components/b-components'
 import BSvgIcon from '@/components/svg-icon/BSvgIcon.vue'
-import { ref, computed } from 'vue'
+import { ref, computed, shallowRef } from 'vue'
 import { useEventListener } from '@/hooks/common'
-import { Position, ComponentData, Space } from '@/components/page-editor/types'
+import { Position, ComponentData, Space, MovingType } from '@/components/page-editor/types'
 import {
   LAZY_DELTA,
   EDITOR_LEFT, EDITOR_TOP,
   DRAGGING_MOUSE_OFFSET,
   GRID_WIDTH, GRID_HEIGHT,
+  MOVE_TYPE_NEW, MOVE_TYPE_MOVE,
 } from '@/libs/consts'
 import BComponent from '@/components/page-editor/BComponent.vue'
 import { definitionToData } from '@/libs/utils'
 
 // 正在拖动的组件
 const draggingComponent = ref<ComponentData | null>(null)
+// 鼠标移动时的类型，move-拖动组件，new-新增组件，resize-缩放组件
+let curType: MovingType = null
 // 鼠标按下时的位置
 const startPosition: Position = {
   left: 0,
   top: 0,
 }
+// 拖动元素时，鼠标相对于组件的坐标
+const mouseOffset: Position = {
+  left: 0,
+  top: 0,
+}
 // 组件是否正在移动
 const isMoving = ref(false)
-// 拖动时，鼠标相对于组件左上角的位置
-let mouseOffsetPosition: Position = {
-  left: DRAGGING_MOUSE_OFFSET,
-  top: DRAGGING_MOUSE_OFFSET,
-}
+// 页面上的所有组件列表
 const componentDataList = ref<ComponentData[]>([])
 const uiComponentDataList = computed(() => {
   return componentDataList.value.filter(componentHasUi)
 })
+// 当前选中的组件
+const selectedComponent = shallowRef<ComponentData | null>(null)
 
-// 开始拖拽一个新组建
-const onSelectNew = (e: MouseEvent, component: ComponentData) => {
+const onStartNew = (e: MouseEvent, component: ComponentData) => {
+  startMove(e, component, MOVE_TYPE_NEW)
+}
+// 开始拖拽组建，移动，新增或缩放
+const startMove = (e: MouseEvent, component: ComponentData, type: MovingType) => {
   if (e.buttons !== 1) {
     return
   }
 
+  curType = type
   draggingComponent.value = component
 
   startPosition.left = e.clientX
   startPosition.top = e.clientY
+
+  // 新增组件时，鼠标便宜默认为 DRAGGING_MOUSE_OFFSET，否则需要计算
+  mouseOffset.left = type === MOVE_TYPE_NEW ? DRAGGING_MOUSE_OFFSET : (e.clientX - draggingComponent.value.left - EDITOR_LEFT)
+  mouseOffset.top = type === MOVE_TYPE_NEW ? DRAGGING_MOUSE_OFFSET : (e.clientY - draggingComponent.value.top - EDITOR_TOP)
 }
 // 停止鼠标拖动
 const stop = () => {
   isMoving.value = false
   draggingComponent.value = null
+  curType = null
 }
 useEventListener(document, 'mousemove', (_e: Event) => {
   if (!draggingComponent.value) {
@@ -68,12 +83,11 @@ useEventListener(document, 'mousemove', (_e: Event) => {
 
   if (Math.abs(deltaX) > LAZY_DELTA || Math.abs(deltaY) > LAZY_DELTA) {
     isMoving.value = true
-    draggingComponent.value.left = deltaX + startPosition.left - mouseOffsetPosition.left - EDITOR_LEFT
-    draggingComponent.value.top = deltaY + startPosition.top - mouseOffsetPosition.top - EDITOR_TOP
+    draggingComponent.value.left = deltaX + startPosition.left - mouseOffset.left - EDITOR_LEFT
+    draggingComponent.value.top = deltaY + startPosition.top - mouseOffset.top - EDITOR_TOP
   }
 })
-// 添加新的组件到编辑器
-const onAddNewComponent = (_e: Event) => {
+useEventListener(document, 'mouseup', (_e: Event) => {
   const c = draggingComponent.value
   const ps = placeholderSpace.value
 
@@ -85,16 +99,18 @@ const onAddNewComponent = (_e: Event) => {
     return
   }
 
-  componentDataList.value.push({
-    ...c,
-    left: ps.left,
-    top: ps.top,
-    width: ps.width / GRID_WIDTH,
-    height: ps.height / GRID_HEIGHT,
-  })
+  // 使用 占位元素的 大小和位置
+  c.left = ps.left
+  c.top = ps.top
+  c.width = ps.width / GRID_WIDTH
+  c.height = ps.height / GRID_HEIGHT
+
+  if (curType === 'new') {
+    componentDataList.value.push({ ...c })
+  }
+  selectedComponent.value = c
   stop()
-}
-useEventListener(document, 'mouseup', onAddNewComponent)
+})
 
 const placeholderSpace = computed<Space>(() => {
   const dc = draggingComponent.value
@@ -140,6 +156,11 @@ const placeholderSpaceStyles = computed(() => {
     top: `${s.top}px`,
   }
 })
+
+const onStartMove = (e: MouseEvent, component: ComponentData) => {
+  selectedComponent.value = component
+  startMove(e, component, MOVE_TYPE_MOVE)
+}
 </script>
 
 <template>
@@ -151,7 +172,7 @@ const placeholderSpaceStyles = computed(() => {
           v-for="component in components"
           :key="component.name"
           class="component-item"
-          @mousedown.stop="onSelectNew($event, definitionToData(component))"
+          @mousedown.stop="onStartNew($event, definitionToData(component))"
         >
           <BSvgIcon :name="`component-${component.icon ?? '_default'}`"/>
           <span class="component-name">{{ component.showName || component.name }}</span>
@@ -169,7 +190,11 @@ const placeholderSpaceStyles = computed(() => {
               :data="draggingComponent"
             />
             <template v-for="componentData in uiComponentDataList" :key="componentData.id">
-              <BComponent :data="componentData"/>
+              <BComponent
+                :data="componentData"
+                :selected-id="selectedComponent?.id"
+                @mousedown.stop="onStartMove($event, componentData)"
+              />
             </template>
           </div>
         </div>
