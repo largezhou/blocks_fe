@@ -6,15 +6,30 @@ export default defineComponent({
   showName: '轮询',
   icon: 'interval',
   category: '功能',
+  minHeightUnit: 0,
+  minWidthUnit: 0,
 })
 </script>
 
 <script setup lang="ts">
 import { useInterval } from '@/hooks/common'
 
+const props = defineProps({
+  time: {
+    type: null,
+    default: 1000,
+    validator: (prop: Number) => prop >= 1,
+  },
+})
+
+const emits = defineEmits<{
+  (e: 'interval'): void
+}>()
+
 useInterval(() => {
+  emits('interval')
   console.log('BInterval')
-}, 1000)
+}, props.time)
 </script>
 
 <template/>

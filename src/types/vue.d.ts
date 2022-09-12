@@ -4,14 +4,17 @@ declare module '@vue/runtime-core' {
   interface ComponentCustomOptions {
     /**
      * 组件展示的名称
+     * 编辑器上的组件必填
      */
     showName?: string,
     /**
      * 组件占用的最小宽度单元
+     * 编辑器上的组件必填，非 UI 组件填 0
      */
     minWidthUnit?: number
     /**
      * 组件占用的最小高度单元
+     * 编辑器上的组件必填，非 UI 组件填 0
      */
     minHeightUnit?: number
     /**

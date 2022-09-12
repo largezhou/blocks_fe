@@ -45,6 +45,8 @@ const uiComponentDataList = computed(() => {
 })
 // 当前选中的组件
 const selectedComponent = shallowRef<ComponentData | null>(null)
+// 当点击到这些元素上时，不会取消选中组件
+const notCancelSelectElClasses = ['b-component']
 
 const onStartNew = (e: MouseEvent, component: ComponentData) => {
   startMove(e, component, MOVE_TYPE_NEW)
@@ -161,6 +163,18 @@ const onStartMove = (e: MouseEvent, component: ComponentData) => {
   selectedComponent.value = component
   startMove(e, component, MOVE_TYPE_MOVE)
 }
+// 当点击编辑器空白区域时，取消选中
+const onCancelSelect = (e: MouseEvent) => {
+  for (const eventTarget of e.composedPath()) {
+    for (const clazz of notCancelSelectElClasses) {
+      if ((eventTarget as Element)?.classList?.contains(clazz)) {
+        return
+      }
+    }
+  }
+
+  selectedComponent.value = null
+}
 </script>
 
 <template>
@@ -175,13 +189,13 @@ const onStartMove = (e: MouseEvent, component: ComponentData) => {
           @mousedown.stop="onStartNew($event, definitionToData(component))"
         >
           <BSvgIcon :name="`component-${component.icon ?? '_default'}`"/>
-          <span class="component-name">{{ component.showName || component.name }}</span>
+          <span class="component-name">{{ component.showName }}</span>
         </div>
       </template>
     </ALayoutSider>
     <ALayout class="layout-main">
       <ALayoutHeader class="header"/>
-      <ALayoutContent class="content">
+      <ALayoutContent class="content" @click="onCancelSelect">
         <div>
           <div>
             <div class="b-placeholder" :style="placeholderSpaceStyles"/>

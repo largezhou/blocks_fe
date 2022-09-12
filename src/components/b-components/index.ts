@@ -14,12 +14,12 @@ export const components: ComponentDefinition[] = [
 ]
 
 /**
- * 长和宽都不为 0 时，属于 UI 组件，会在页面上显示出来
+ * 有长宽的，属于 UI 组件，会在页面上显示出来
  *
  * @param data 组件配置数据
  */
 export const componentHasUi = (data: ComponentData): boolean => {
-  return data.width * data.height !== 0
+  return data.width >= 1 && data.height >= 1
 }
 
 /**
@@ -31,6 +31,10 @@ export const groupComponents: Dictionary<ComponentDefinition[]> = _groupBy(compo
 
 export default (app: App) => {
   components.forEach((x) => {
+    if (!x.showName || x.minWidthUnit === undefined || x.minHeightUnit === undefined) {
+      throw new Error('组件必须要有 `showName`, `minWidthUnit`, `minHeightUnit` 属性')
+    }
+
     app.component(x.name, x)
   })
 }
