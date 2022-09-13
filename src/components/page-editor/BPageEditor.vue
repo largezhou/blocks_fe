@@ -17,7 +17,7 @@ import {
   EDITOR_LEFT, EDITOR_TOP,
   DRAGGING_MOUSE_OFFSET,
   GRID_WIDTH, GRID_HEIGHT,
-  MOVE_TYPE_NEW, MOVE_TYPE_MOVE,
+  MOVE_TYPE_NEW, MOVE_TYPE_MOVE, MOVE_TYPE_RESIZE,
 } from '@/libs/consts'
 import BComponent from '@/components/page-editor/BComponent.vue'
 import { definitionToData } from '@/libs/utils'
@@ -25,11 +25,13 @@ import { definitionToData } from '@/libs/utils'
 // 正在拖动的组件
 const draggingComponent = ref<ComponentData | null>(null)
 // 鼠标移动时的类型，move-拖动组件，new-新增组件，resize-缩放组件
-let curType: MovingType = null
-// 鼠标按下时的位置
-const startPosition: Position = {
+let curType = ref<MovingType>(null)
+// 鼠标按下时，鼠标的位置和组件的大小
+const startSpace: Space = {
   left: 0,
   top: 0,
+  height: 0,
+  width: 0,
 }
 // 拖动元素时，鼠标相对于组件的坐标
 const mouseOffset: Position = {
@@ -57,36 +59,51 @@ const startMove = (e: MouseEvent, component: ComponentData, type: MovingType) =>
     return
   }
 
-  curType = type
+  curType.value = type
   draggingComponent.value = component
 
-  startPosition.left = e.clientX
-  startPosition.top = e.clientY
+  startSpace.left = e.clientX
+  startSpace.top = e.clientY
+  startSpace.width = component.width
+  startSpace.height = component.height
 
-  // 新增组件时，鼠标便宜默认为 DRAGGING_MOUSE_OFFSET，否则需要计算
-  mouseOffset.left = type === MOVE_TYPE_NEW ? DRAGGING_MOUSE_OFFSET : (e.clientX - draggingComponent.value.left - EDITOR_LEFT)
-  mouseOffset.top = type === MOVE_TYPE_NEW ? DRAGGING_MOUSE_OFFSET : (e.clientY - draggingComponent.value.top - EDITOR_TOP)
+  if (curType.value === MOVE_TYPE_NEW || curType.value === MOVE_TYPE_MOVE) {
+    // 新增组件时，鼠标偏移默认为 DRAGGING_MOUSE_OFFSET，否则需要计算
+    mouseOffset.left = type === MOVE_TYPE_NEW ? DRAGGING_MOUSE_OFFSET : (e.clientX - draggingComponent.value.left - EDITOR_LEFT)
+    mouseOffset.top = type === MOVE_TYPE_NEW ? DRAGGING_MOUSE_OFFSET : (e.clientY - draggingComponent.value.top - EDITOR_TOP)
+  }
 }
 // 停止鼠标拖动
 const stop = () => {
   isMoving.value = false
   draggingComponent.value = null
-  curType = null
+  curType.value = null
 }
 useEventListener(document, 'mousemove', (_e: Event) => {
-  if (!draggingComponent.value) {
+  const dc = draggingComponent.value
+
+  if (!dc) {
     return
   }
 
   const e = _e as MouseEvent
 
-  const deltaX = e.clientX - startPosition.left
-  const deltaY = e.clientY - startPosition.top
+  const deltaX = e.clientX - startSpace.left
+  const deltaY = e.clientY - startSpace.top
 
-  if (Math.abs(deltaX) > LAZY_DELTA || Math.abs(deltaY) > LAZY_DELTA) {
+  if (
+    (curType.value === MOVE_TYPE_NEW || curType.value === MOVE_TYPE_MOVE)
+    && (Math.abs(deltaX) > LAZY_DELTA || Math.abs(deltaY) > LAZY_DELTA)
+  ) {
     isMoving.value = true
-    draggingComponent.value.left = deltaX + startPosition.left - mouseOffset.left - EDITOR_LEFT
-    draggingComponent.value.top = deltaY + startPosition.top - mouseOffset.top - EDITOR_TOP
+    dc.left = deltaX + startSpace.left - mouseOffset.left - EDITOR_LEFT
+    dc.top = deltaY + startSpace.top - mouseOffset.top - EDITOR_TOP
+  }
+
+  if (curType.value === MOVE_TYPE_RESIZE) {
+    isMoving.value = true
+    dc.width = Math.max(dc.minWidthUnit * GRID_WIDTH, deltaX + startSpace.width)
+    dc.height = Math.max(dc.minHeightUnit * GRID_HEIGHT, deltaY + startSpace.height)
   }
 })
 useEventListener(document, 'mouseup', (_e: Event) => {
@@ -104,10 +121,10 @@ useEventListener(document, 'mouseup', (_e: Event) => {
   // 使用 占位元素的 大小和位置
   c.left = ps.left
   c.top = ps.top
-  c.width = ps.width / GRID_WIDTH
-  c.height = ps.height / GRID_HEIGHT
+  c.width = ps.width
+  c.height = ps.height
 
-  if (curType === 'new') {
+  if (curType.value === MOVE_TYPE_NEW) {
     componentDataList.value.push({ ...c })
   }
   selectedComponent.value = c
@@ -123,9 +140,10 @@ const placeholderSpace = computed<Space>(() => {
     width: 0,
   }
 
-  if (!isMoving.value || dc === null || !componentHasUi(dc)) {
+  if (!isMoving.value || dc === null) {
     return space
   }
+
   for (const key of ['left', 'top', 'width', 'height'] as (keyof Space)[]) {
     let gridValue
     if (key === 'left' || key === 'width') {
@@ -134,12 +152,7 @@ const placeholderSpace = computed<Space>(() => {
       gridValue = GRID_HEIGHT
     }
 
-    let val = dc[key]
-    if (key === 'width' || key === 'height') {
-      val = val * gridValue
-    }
-
-    space[key] = Math.round(val / gridValue) * gridValue
+    space[key] = Math.round(dc[key] / gridValue) * gridValue
   }
 
   if (space.left < 0 || space.top < 0) {
@@ -175,6 +188,20 @@ const onCancelSelect = (e: MouseEvent) => {
 
   selectedComponent.value = null
 }
+const getComponentIndexById = (id: string): number => {
+  return componentDataList.value.findIndex((component: ComponentData) => component.id === id)
+}
+useEventListener(document, 'keydown', (_e: Event) => {
+  const e = _e as KeyboardEvent
+  if (selectedComponent.value && e.key === 'Delete') {
+    const i = getComponentIndexById(selectedComponent.value.id)
+    componentDataList.value.splice(i, 1)
+  }
+})
+
+const onStartResize = (e: MouseEvent, component: ComponentData) => {
+  startMove(e, component, MOVE_TYPE_RESIZE)
+}
 </script>
 
 <template>
@@ -195,12 +222,12 @@ const onCancelSelect = (e: MouseEvent) => {
     </ALayoutSider>
     <ALayout class="layout-main">
       <ALayoutHeader class="header"/>
-      <ALayoutContent class="content" @click="onCancelSelect">
+      <ALayoutContent class="content" @mousedown="onCancelSelect">
         <div>
           <div>
             <div class="b-placeholder" :style="placeholderSpaceStyles"/>
             <BComponent
-              v-if="isMoving && draggingComponent !== null"
+              v-if="curType === MOVE_TYPE_NEW && isMoving && draggingComponent !== null"
               :data="draggingComponent"
             />
             <template v-for="componentData in uiComponentDataList" :key="componentData.id">
@@ -208,6 +235,7 @@ const onCancelSelect = (e: MouseEvent) => {
                 :data="componentData"
                 :selected-id="selectedComponent?.id"
                 @mousedown.stop="onStartMove($event, componentData)"
+                @resize="onStartResize"
               />
             </template>
           </div>
@@ -268,7 +296,7 @@ const onCancelSelect = (e: MouseEvent) => {
 }
 
 .b-placeholder {
-  background: #e6f7ff;
+  background: #d7f7ff;
   border-radius: 2px;
   position: absolute;
 }

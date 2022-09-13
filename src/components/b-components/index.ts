@@ -19,7 +19,7 @@ export const components: ComponentDefinition[] = [
  * @param data 组件配置数据
  */
 export const componentHasUi = (data: ComponentData): boolean => {
-  return data.width >= 1 && data.height >= 1
+  return data.width > 0 && data.height > 0
 }
 
 /**

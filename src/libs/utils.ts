@@ -1,5 +1,6 @@
 import { ComponentDefinition } from '@/types/vue'
 import { ComponentData } from '@/components/page-editor/types'
+import { GRID_HEIGHT, GRID_WIDTH } from '@/libs/consts'
 
 export const componentId = (name: string) => {
   return `${name}-${Math.random().toString(36).slice(-8)}`
@@ -16,9 +17,11 @@ export const definitionToData = (d: ComponentDefinition): ComponentData => {
     id: componentId(d.name),
     setting: {},
     icon: d.icon,
-    width: d.minWidthUnit || 0,
-    height: d.minHeightUnit || 0,
+    width: (d.minWidthUnit || 0) * GRID_WIDTH,
+    height: (d.minHeightUnit || 0) * GRID_HEIGHT,
     left: 0,
     top: 0,
+    minWidthUnit: d.minWidthUnit || 0,
+    minHeightUnit: d.minHeightUnit || 0,
   }
 }

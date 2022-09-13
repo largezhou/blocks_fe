@@ -25,6 +25,10 @@ export type ComponentData = {
   setting: Record<string, unknown>
   // 图标，没有 UI 的组件，在编辑器里展示为图标
   icon?: string
+  // 组件的最小宽度
+  minWidthUnit: number,
+  // 最小高度
+  minHeightUnit: number,
 } & Space
 
 export type MovingType = MOVE_TYPE_MOVE | MOVE_TYPE_RESIZE | MOVE_TYPE_NEW | null

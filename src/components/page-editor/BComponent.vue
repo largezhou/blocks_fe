@@ -17,21 +17,18 @@ const props = defineProps<{
   data: ComponentData
   selectedId?: string
 }>()
+
+const emits = defineEmits<{
+  (e: 'resize', event: MouseEvent, data: ComponentData): void
+}>()
+
 const hasUI = componentHasUi(props.data)
 const spaceStyles = computed(() => {
   const d = props.data as ComponentData
 
-  let w, h
-  if (hasUI) {
-    w = d.width || 1
-    h = d.height || 1
-  } else {
-    w = h = 1
-  }
-
   return {
-    width: `${w * GRID_WIDTH}px`,
-    height: `${h * GRID_HEIGHT}px`,
+    width: `${d.width || GRID_WIDTH}px`,
+    height: `${d.height || GRID_HEIGHT}px`,
     left: `${d.left}px`,
     top: `${d.top}px`,
   }
@@ -54,21 +51,21 @@ const isSelected = computed(() => props.selectedId === props.data.id)
       v-else
       :name="`component-${data?.icon || '_default'}`"
     />
-    <div class="b-resizer"/>
+    <div class="b-resizer" @mousedown.stop="emits('resize', $event, data)"/>
   </div>
 </template>
 
 <style lang="less">
 @component-padding: 4px;
+@selected-border: 1px;
+@selected-padding: @component-padding - @selected-border;
 
 .b-component {
+  user-select: none;
   box-sizing: border-box;
   position: absolute;
   padding: @component-padding;
   border-radius: 2px;
-
-  @selected-border: 1px;
-  @selected-padding: @component-padding - @selected-border;
 
   &.b-selected {
     border: @selected-border #bae7ff solid;
