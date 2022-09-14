@@ -6,12 +6,15 @@ import { App } from 'vue'
 import _groupBy from 'lodash/groupBy'
 import { Dictionary } from '@/types/common'
 import { ComponentData } from '@/components/page-editor/types'
+import BComponentNotExists from '@/components/b-components/component-not-exists/BComponentNotExists.vue'
 
-export const components: ComponentDefinition[] = [
+export const componentMap: Record<string, ComponentDefinition> = {
   BButton,
   BInput,
   BInterval,
-]
+}
+
+export const components: ComponentDefinition[] = Object.values(componentMap)
 
 /**
  * 有长宽的，属于 UI 组件，会在页面上显示出来
@@ -37,4 +40,6 @@ export default (app: App) => {
 
     app.component(x.name, x)
   })
+
+  app.component(BComponentNotExists.name, BComponentNotExists)
 }

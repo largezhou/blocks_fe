@@ -9,9 +9,10 @@ export default defineComponent({
 <script setup lang="ts">
 import BSvgIcon from '@/components/svg-icon/BSvgIcon.vue'
 import { ComponentData } from '@/components/page-editor/types'
-import { componentHasUi } from '@/components/b-components'
+import { componentHasUi, componentMap } from '@/components/b-components'
 import { GRID_WIDTH, GRID_HEIGHT } from '@/libs/consts'
 import { computed } from 'vue'
+import BComponentNotExists from '@/components/b-components/component-not-exists/BComponentNotExists.vue'
 
 const props = defineProps<{
   data: ComponentData
@@ -22,7 +23,12 @@ const emits = defineEmits<{
   (e: 'resize', event: MouseEvent, data: ComponentData): void
 }>()
 
-const hasUI = componentHasUi(props.data)
+const cd = componentMap[props.data.name]
+
+// 当组件不存在时，使用 BComponentNotExists 展示，没有任何功能
+const componentName = cd?.name || BComponentNotExists.name
+const hasUI = cd ? componentHasUi(props.data) : true
+
 const spaceStyles = computed(() => {
   const d = props.data as ComponentData
 
@@ -43,13 +49,13 @@ const isSelected = computed(() => props.selectedId === props.data.id)
     :style="spaceStyles"
   >
     <component
-      :is="data.name"
+      :is="componentName"
       v-if="hasUI"
       v-bind="data?.setting"
     />
     <BSvgIcon
       v-else
-      :name="`component-${data?.icon || '_default'}`"
+      :name="`component-${cd?.icon || '_default'}`"
     />
     <div class="b-resizer" @mousedown.stop="emits('resize', $event, data)"/>
   </div>

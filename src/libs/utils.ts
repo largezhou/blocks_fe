@@ -16,12 +16,9 @@ export const definitionToData = (d: ComponentDefinition): ComponentData => {
     name: d.name,
     id: componentId(d.name),
     setting: {},
-    icon: d.icon,
-    width: (d.minWidthUnit || 0) * GRID_WIDTH,
-    height: (d.minHeightUnit || 0) * GRID_HEIGHT,
+    width: d.minWidthUnit as number * GRID_WIDTH,
+    height: d.minHeightUnit as number * GRID_HEIGHT,
     left: 0,
     top: 0,
-    minWidthUnit: d.minWidthUnit || 0,
-    minHeightUnit: d.minHeightUnit || 0,
   }
 }

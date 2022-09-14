@@ -1,4 +1,5 @@
 import { DefineComponent } from 'vue'
+import { ComponentSetting } from '@/types/common'
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomOptions {
@@ -29,6 +30,10 @@ declare module '@vue/runtime-core' {
      * 组件分类
      */
     category?: string
+    /**
+     * 组件的配置项描述
+     */
+    settings?: ComponentSetting[]
   }
 
   interface ComponentCustomProperties {

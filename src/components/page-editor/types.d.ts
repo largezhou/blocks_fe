@@ -15,7 +15,7 @@ export interface Size {
 // 位置和大小
 export type Space = Position & Size
 
-// 页面上组件的配置信息
+// 页面上组件的配置信息，持久化用
 export type ComponentData = {
   // 组件名
   name: string
@@ -23,12 +23,6 @@ export type ComponentData = {
   id: string
   // 组件的配置
   setting: Record<string, unknown>
-  // 图标，没有 UI 的组件，在编辑器里展示为图标
-  icon?: string
-  // 组件的最小宽度
-  minWidthUnit: number,
-  // 最小高度
-  minHeightUnit: number,
 } & Space
 
 export type MovingType = MOVE_TYPE_MOVE | MOVE_TYPE_RESIZE | MOVE_TYPE_NEW | null

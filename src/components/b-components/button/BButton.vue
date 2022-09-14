@@ -1,5 +1,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
+import settings from '@/components/b-components/button/settings'
 
 export default defineComponent({
   name: 'BButton',
@@ -8,6 +9,7 @@ export default defineComponent({
   minHeightUnit: 1,
   icon: 'button',
   category: '通用',
+  settings,
 })
 </script>
 

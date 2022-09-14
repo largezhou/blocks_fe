@@ -7,7 +7,7 @@ export default defineComponent({
 </script>
 
 <script setup lang="ts">
-import { componentHasUi, groupComponents } from '@/components/b-components'
+import { componentHasUi, groupComponents, componentMap } from '@/components/b-components'
 import BSvgIcon from '@/components/svg-icon/BSvgIcon.vue'
 import { ref, computed, shallowRef } from 'vue'
 import { useEventListener } from '@/hooks/common'
@@ -101,19 +101,17 @@ useEventListener(document, 'mousemove', (_e: Event) => {
   }
 
   if (curType.value === MOVE_TYPE_RESIZE) {
+    const cd = componentMap[dc.name]
     isMoving.value = true
-    dc.width = Math.max(dc.minWidthUnit * GRID_WIDTH, deltaX + startSpace.width)
-    dc.height = Math.max(dc.minHeightUnit * GRID_HEIGHT, deltaY + startSpace.height)
+    dc.width = Math.max((cd?.minWidthUnit || 1) * GRID_WIDTH, deltaX + startSpace.width)
+    dc.height = Math.max((cd?.minHeightUnit || 1) * GRID_HEIGHT, deltaY + startSpace.height)
   }
 })
 useEventListener(document, 'mouseup', (_e: Event) => {
   const c = draggingComponent.value
   const ps = placeholderSpace.value
 
-  if (
-    !isMoving.value || c === null
-    || ps.left < 0 || ps.top < 0
-  ) {
+  if (!isMoving.value || c === null || ps.left < 0 || ps.top < 0) {
     stop()
     return
   }
@@ -144,7 +142,7 @@ const placeholderSpace = computed<Space>(() => {
     return space
   }
 
-  for (const key of ['left', 'top', 'width', 'height'] as (keyof Space)[]) {
+  for (const key of (['left', 'top', 'width', 'height'] as (keyof Space)[])) {
     let gridValue
     if (key === 'left' || key === 'width') {
       gridValue = GRID_WIDTH
