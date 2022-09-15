@@ -5,8 +5,8 @@ import settings from './settings'
 export default defineComponent({
   name: 'BButton',
   showName: '按钮',
-  minWidthUnit: 1,
-  minHeightUnit: 1,
+  minWidthUnit: 2,
+  minHeightUnit: 2,
   icon: 'button',
   category: '通用',
   settings,

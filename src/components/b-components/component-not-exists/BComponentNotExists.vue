@@ -1,6 +1,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import BSvgIcon from '@/components/svg-icon/BSvgIcon.vue'
+import { MIN_HEIGHT_UNIT, MIN_WIDTH_UNIT } from '@/libs/consts'
 
 export default defineComponent({
   name: 'BComponentNotExists',
@@ -8,8 +9,8 @@ export default defineComponent({
     BSvgIcon,
   },
   showName: '组件不存在',
-  minHeightUnit: 1,
-  minWidthUnit: 1,
+  minHeightUnit: MIN_HEIGHT_UNIT,
+  minWidthUnit: MIN_WIDTH_UNIT,
 })
 </script>
 

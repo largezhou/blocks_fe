@@ -10,7 +10,7 @@ export default defineComponent({
 import BSvgIcon from '@/components/svg-icon/BSvgIcon.vue'
 import { ComponentData } from '@/components/page-editor/types'
 import { componentHasUi, componentMap } from '@/components/b-components'
-import { GRID_WIDTH, GRID_HEIGHT } from '@/libs/consts'
+import { GRID_WIDTH, GRID_HEIGHT, MIN_HEIGHT_UNIT, MIN_WIDTH_UNIT } from '@/libs/consts'
 import { computed } from 'vue'
 import BComponentNotExists from '@/components/b-components/component-not-exists/BComponentNotExists.vue'
 
@@ -33,8 +33,8 @@ const spaceStyles = computed(() => {
   const d = props.data as ComponentData
 
   return {
-    width: `${d.width || GRID_WIDTH}px`,
-    height: `${d.height || GRID_HEIGHT}px`,
+    width: `${d.width || (MIN_WIDTH_UNIT * GRID_WIDTH)}px`,
+    height: `${d.height || (MIN_HEIGHT_UNIT * GRID_HEIGHT)}px`,
     left: `${d.left}px`,
     top: `${d.top}px`,
   }

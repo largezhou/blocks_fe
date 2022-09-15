@@ -7,12 +7,16 @@ export const LAZY_DELTA = 8
 /**
  * 单元格宽度
  */
-export const GRID_WIDTH = 75
+export const GRID_WIDTH = 38
+
+export const MIN_WIDTH_UNIT = 2
 
 /**
  * 单元格高度
  */
-export const GRID_HEIGHT = 45
+export const GRID_HEIGHT = 23
+
+export const MIN_HEIGHT_UNIT = 2
 
 // 编辑器位置
 export const EDITOR_LEFT = 240

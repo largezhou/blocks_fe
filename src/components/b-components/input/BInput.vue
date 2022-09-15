@@ -5,8 +5,8 @@ import settings from './settings'
 export default defineComponent({
   name: 'BInput',
   showName: '输入框',
-  minWidthUnit: 3,
-  minHeightUnit: 2,
+  minWidthUnit: 6,
+  minHeightUnit: 4,
   icon: 'input',
   category: '输入',
   settings,
