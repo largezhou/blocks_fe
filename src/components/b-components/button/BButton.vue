@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
-import settings from '@/components/b-components/button/settings'
+import settings from './settings'
 
 export default defineComponent({
   name: 'BButton',

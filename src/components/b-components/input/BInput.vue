@@ -1,5 +1,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
+import settings from './settings'
 
 export default defineComponent({
   name: 'BInput',
@@ -8,6 +9,7 @@ export default defineComponent({
   minHeightUnit: 2,
   icon: 'input',
   category: '输入',
+  settings,
 })
 </script>
 
@@ -15,19 +17,21 @@ export default defineComponent({
 withDefaults(
   defineProps<{
     label?: string,
+    name?: string,
+    value?: any,
     extra?: string,
     placeholder?: string,
     allowClear?: boolean,
     disabled?: boolean,
-    value?: any,
   }>(),
   {
     label: '输入框',
+    name: 'input',
+    value: null,
     extra: '',
     placeholder: '请输入...',
     allowClear: true,
     disabled: false,
-    value: null,
   },
 )
 </script>
@@ -40,8 +44,6 @@ withDefaults(
         :allow-clear="allowClear"
         :placeholder="placeholder"
         :disabled="disabled"
-        :lebel="label"
-        :extra="extra"
       />
     </AFormItem>
   </div>

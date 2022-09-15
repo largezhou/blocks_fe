@@ -2,15 +2,6 @@ export type Dictionary<T> = {
   [key: string]: T
 }
 
-interface Option {
-  value: string,
-  text: string,
-}
-
-interface ASelectSetting {
-  options: Option[]
-}
-
 /**
  * 组件的配置项
  */
@@ -28,11 +19,16 @@ export interface ComponentSetting {
    */
   propsName: string,
   /**
+   * 组件中传递值的 props 名，默认为 value，比如单个 checkbox 的该值应该为 checked
+   */
+  valueName?: string,
+  /**
    * 组件默认值
    */
   value: any,
   /**
    * 组件的其他配置项，比如 ASelect 的 Option 之类的
+   * @see https://www.antdv.com/components/overview-cn
    */
-  setting?: ASelectSetting,
+  setting?: Record<string, unknown>,
 }

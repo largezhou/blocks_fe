@@ -1,44 +1,48 @@
 import { ComponentSetting } from '@/types/common'
 
-export default <ComponentSetting[]>[
+const settings: ComponentSetting[] = [
   {
     label: '文本',
-    componentName: 'BInput',
+    componentName: 'AInput',
     propsName: 'text',
     value: '按钮',
   },
   {
     label: '颜色',
-    componentName: 'BSelect',
+    componentName: 'ASelect',
     propsName: 'type',
     value: 'primary',
     setting: {
       options: [
         {
-          value: 'default',
-          text: '默认',
+          value: 'primary',
+          label: '主要',
         },
         {
-          value: 'primary',
-          text: '主要',
+          value: 'default',
+          label: '默认',
         },
         {
           value: 'text',
-          text: '文本',
+          label: '文本',
         },
       ],
     },
   },
   {
     label: '设置为危险按钮',
-    componentName: 'BCheckbox',
+    componentName: 'ACheckbox',
     propsName: 'danger',
+    valueName: 'checked',
     value: false,
   },
   {
     label: '禁用',
-    componentName: 'BCheckbox',
+    componentName: 'ACheckbox',
     propsName: 'disabled',
+    valueName: 'checked',
     value: false,
   },
 ]
+
+export default settings

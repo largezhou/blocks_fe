@@ -1,3 +1,7 @@
+/**
+ * 这里是编辑器里所有可用的组件
+ */
+
 import BButton from '@/components/b-components/button/BButton.vue'
 import BInput from '@/components/b-components/input/BInput.vue'
 import BInterval from '@/components/b-components/interval/BInterval.vue'

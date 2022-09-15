@@ -1,5 +1,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
+import settings from './settings'
 
 export default defineComponent({
   name: 'BInterval',
@@ -8,6 +9,7 @@ export default defineComponent({
   category: '功能',
   minHeightUnit: 0,
   minWidthUnit: 0,
+  settings,
 })
 </script>
 

@@ -11,7 +11,7 @@ import { componentHasUi, groupComponents, componentMap } from '@/components/b-co
 import BSvgIcon from '@/components/svg-icon/BSvgIcon.vue'
 import { ref, computed, shallowRef } from 'vue'
 import { useEventListener } from '@/hooks/common'
-import { Position, ComponentData, Space, MovingType } from '@/components/page-editor/types'
+import { Position, ComponentData, Space, MovingType, SettingValues } from '@/components/page-editor/types'
 import {
   LAZY_DELTA,
   EDITOR_LEFT, EDITOR_TOP,
@@ -21,6 +21,8 @@ import {
 } from '@/libs/consts'
 import BComponent from '@/components/page-editor/BComponent.vue'
 import { definitionToData } from '@/libs/utils'
+import BSettings from '@/components/page-editor/BSettings.vue'
+import mockComponentDataList from '@/components/page-editor/mock-component-data-list'
 
 // 正在拖动的组件
 const draggingComponent = ref<ComponentData | null>(null)
@@ -41,14 +43,12 @@ const mouseOffset: Position = {
 // 组件是否正在移动
 const isMoving = ref(false)
 // 页面上的所有组件列表
-const componentDataList = ref<ComponentData[]>([])
+const componentDataList = ref<ComponentData[]>(mockComponentDataList)
 const uiComponentDataList = computed(() => {
   return componentDataList.value.filter(componentHasUi)
 })
 // 当前选中的组件
 const selectedComponent = shallowRef<ComponentData | null>(null)
-// 当点击到这些元素上时，不会取消选中组件
-const notCancelSelectElClasses = ['b-component']
 
 const onStartNew = (e: MouseEvent, component: ComponentData) => {
   startMove(e, component, MOVE_TYPE_NEW)
@@ -98,6 +98,12 @@ useEventListener(document, 'mousemove', (_e: Event) => {
     isMoving.value = true
     dc.left = deltaX + startSpace.left - mouseOffset.left - EDITOR_LEFT
     dc.top = deltaY + startSpace.top - mouseOffset.top - EDITOR_TOP
+
+    // 移动组件时，不能拖到编辑器外面
+    if (curType.value === MOVE_TYPE_MOVE) {
+      dc.left = Math.max(dc.left, 0)
+      dc.top = Math.max(dc.top, 0)
+    }
   }
 
   if (curType.value === MOVE_TYPE_RESIZE) {
@@ -153,9 +159,13 @@ const placeholderSpace = computed<Space>(() => {
     space[key] = Math.round(dc[key] / gridValue) * gridValue
   }
 
-  if (space.left < 0 || space.top < 0) {
+  if (curType.value === MOVE_TYPE_NEW && (space.left < 0 || space.top < 0)) {
     space.width = 0
     space.height = 0
+  } else {
+    // 不是新添加组件时，禁止拖到编辑器外面
+    space.left = Math.max(space.left, 0)
+    space.top = Math.max(space.top, 0)
   }
 
   return space
@@ -174,31 +184,40 @@ const onStartMove = (e: MouseEvent, component: ComponentData) => {
   selectedComponent.value = component
   startMove(e, component, MOVE_TYPE_MOVE)
 }
-// 当点击编辑器空白区域时，取消选中
-const onCancelSelect = (e: MouseEvent) => {
-  for (const eventTarget of e.composedPath()) {
-    for (const clazz of notCancelSelectElClasses) {
-      if ((eventTarget as Element)?.classList?.contains(clazz)) {
-        return
-      }
-    }
-  }
-
-  selectedComponent.value = null
-}
 const getComponentIndexById = (id: string): number => {
   return componentDataList.value.findIndex((component: ComponentData) => component.id === id)
+}
+const getComponentById = (id: string): ComponentData | undefined => {
+  return componentDataList.value[getComponentIndexById(id)]
 }
 useEventListener(document, 'keydown', (_e: Event) => {
   const e = _e as KeyboardEvent
   if (selectedComponent.value && e.key === 'Delete') {
     const i = getComponentIndexById(selectedComponent.value.id)
     componentDataList.value.splice(i, 1)
+    selectedComponent.value = null
   }
 })
 
 const onStartResize = (e: MouseEvent, component: ComponentData) => {
   startMove(e, component, MOVE_TYPE_RESIZE)
+}
+// 更新组件数据中的 setting 值
+const onUpdateSettingValues = (setting: SettingValues) => {
+  if (!selectedComponent.value) {
+    return
+  }
+
+  const cd = getComponentById(selectedComponent.value.id)
+  if (!cd) {
+    return
+  }
+
+  cd.setting = setting
+}
+
+const onSave = () => {
+  console.log(JSON.stringify(componentDataList.value, null, 2))
 }
 </script>
 
@@ -219,10 +238,20 @@ const onStartResize = (e: MouseEvent, component: ComponentData) => {
       </template>
     </ALayoutSider>
     <ALayout class="layout-main">
-      <ALayoutHeader class="header"/>
-      <ALayoutContent class="content" @mousedown="onCancelSelect">
-        <div>
-          <div>
+      <ALayoutHeader class="header">
+        <div class="header-right-actions">
+          <AButton
+            class="header-btn"
+            type="primary"
+            @click="onSave"
+          >
+            保存
+          </AButton>
+        </div>
+      </ALayoutHeader>
+      <ALayoutContent class="content">
+        <div class="content-1">
+          <div class="content-2">
             <div class="b-placeholder" :style="placeholderSpaceStyles"/>
             <BComponent
               v-if="curType === MOVE_TYPE_NEW && isMoving && draggingComponent !== null"
@@ -238,6 +267,10 @@ const onStartResize = (e: MouseEvent, component: ComponentData) => {
             </template>
           </div>
         </div>
+        <BSettings
+          :component-data="selectedComponent"
+          @update:setting-values="onUpdateSettingValues"
+        />
       </ALayoutContent>
       <ALayoutFooter class="footer">BLOCKS</ALayoutFooter>
     </ALayout>
@@ -297,5 +330,22 @@ const onStartResize = (e: MouseEvent, component: ComponentData) => {
   background: #d7f7ff;
   border-radius: 2px;
   position: absolute;
+}
+
+.header {
+  padding: 0 16px;
+
+  .header-right-actions {
+    height: 100%;
+    float: right;
+  }
+
+  .header-btn {
+    border: none;
+    border-radius: 0;
+    line-height: normal;
+    height: 100%;
+    min-width: 78px;
+  }
 }
 </style>
