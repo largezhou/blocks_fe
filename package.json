@@ -11,6 +11,7 @@
     "svgo": "svgo"
   },
   "dependencies": {
+    "@antv/x6": "^1.34.1",
     "@types/lodash": "^4.14.184",
     "@typescript-eslint/eslint-plugin": "^5.33.1",
     "@typescript-eslint/parser": "^5.33.1",
