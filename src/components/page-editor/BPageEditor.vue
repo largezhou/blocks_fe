@@ -11,7 +11,7 @@ import { componentHasUi, groupComponents, componentMap } from '@/components/b-co
 import BSvgIcon from '@/components/svg-icon/BSvgIcon.vue'
 import { ref, computed, shallowRef } from 'vue'
 import { useEventListener } from '@/hooks/common'
-import { Position, ComponentData, Space, MovingType, SettingValues } from '@/components/page-editor/types'
+import { Position, ComponentData, Space, MovingType } from '@/components/page-editor/types'
 import {
   LAZY_DELTA,
   EDITOR_LEFT, EDITOR_TOP,
@@ -23,6 +23,7 @@ import BComponent from '@/components/page-editor/BComponent.vue'
 import { definitionToData } from '@/libs/utils'
 import BSettings from '@/components/page-editor/BSettings.vue'
 import mockComponentDataList from '@/components/page-editor/mock-component-data-list'
+import { KeyValue } from '@/types/common'
 
 // 正在拖动的组件
 const draggingComponent = ref<ComponentData | null>(null)
@@ -107,7 +108,7 @@ useEventListener(document, 'mousemove', (_e: Event) => {
   }
 
   if (curType.value === MOVE_TYPE_RESIZE) {
-    const cd = componentMap[dc.name]
+    const cd = componentMap[dc.componentName]
     isMoving.value = true
     dc.width = Math.max((cd?.minWidthUnit || MIN_WIDTH_UNIT) * GRID_WIDTH, deltaX + startSpace.width)
     dc.height = Math.max((cd?.minHeightUnit || MIN_HEIGHT_UNIT) * GRID_HEIGHT,  deltaY + startSpace.height)
@@ -203,7 +204,7 @@ const onStartResize = (e: MouseEvent, component: ComponentData) => {
   startMove(e, component, MOVE_TYPE_RESIZE)
 }
 // 更新组件数据中的 setting 值
-const onUpdateSettingValues = (setting: SettingValues) => {
+const onUpdateSettingValues = (setting: KeyValue) => {
   if (!selectedComponent.value) {
     return
   }
@@ -214,6 +215,14 @@ const onUpdateSettingValues = (setting: SettingValues) => {
   }
 
   cd.setting = setting
+}
+
+const onUpdateShowName = (val: string) => {
+  if (!selectedComponent.value) {
+    return
+  }
+
+  selectedComponent.value.showName = val
 }
 
 const onSave = () => {
@@ -270,6 +279,7 @@ const onSave = () => {
         <BSettings
           :component-data="selectedComponent"
           @update:setting-values="onUpdateSettingValues"
+          @update-show-name="onUpdateShowName"
         />
       </ALayoutContent>
       <ALayoutFooter class="footer">BLOCKS</ALayoutFooter>

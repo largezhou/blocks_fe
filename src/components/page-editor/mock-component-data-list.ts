@@ -2,7 +2,8 @@ import { ComponentData } from '@/components/page-editor/types'
 
 const mockComponentDataList: ComponentData[] = [
   {
-    'name': 'BButton',
+    'showName': '重置',
+    'componentName': 'BButton',
     'id': 'BButton-nz6dteey',
     'setting': {
       'text': '重置',
@@ -16,7 +17,8 @@ const mockComponentDataList: ComponentData[] = [
     'top': 92,
   },
   {
-    'name': 'BButton',
+    'showName': '查询',
+    'componentName': 'BButton',
     'id': 'BButton-9yjy7o5m',
     'setting': {
       'text': '查询',
@@ -30,7 +32,8 @@ const mockComponentDataList: ComponentData[] = [
     'top': 92,
   },
   {
-    'name': 'BInput',
+    'showName': '查询 UIN',
+    'componentName': 'BInput',
     'id': 'BInput-4ilyo7eq',
     'setting': {
       'label': 'UIN',
@@ -47,7 +50,8 @@ const mockComponentDataList: ComponentData[] = [
     'top': 0,
   },
   {
-    'name': 'BNo111',
+    'showName': 'A触发B',
+    'componentName': 'BNo111',
     'id': 'BNo111-4ilyo7eq',
     'setting': {},
     'width': 76,

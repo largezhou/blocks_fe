@@ -1,5 +1,5 @@
 import { DefineComponent } from 'vue'
-import { ComponentSetting } from '@/types/common'
+import { ComponentPropsSetting } from '@/components/b-components/types'
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomOptions {
@@ -33,7 +33,7 @@ declare module '@vue/runtime-core' {
     /**
      * 组件的配置项描述
      */
-    settings?: ComponentSetting[]
+    settings?: ComponentPropsSetting[]
   }
 
   interface ComponentCustomProperties {

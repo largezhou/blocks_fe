@@ -1,4 +1,5 @@
 import { MOVE_TYPE_MOVE, MOVE_TYPE_RESIZE, MOVE_TYPE_NEW } from '@/libs/consts'
+import { KeyValue } from '@/types/common'
 
 // 位置
 export interface Position {
@@ -15,16 +16,16 @@ export interface Size {
 // 位置和大小
 export type Space = Position & Size
 
-export type SettingValues = Record<string, unknown>
-
 // 页面上组件的配置信息，持久化用
 export type ComponentData = {
+  // 已使用组件的展示名
+  showName: string,
   // 组件名
-  name: string
+  componentName: string
   // 唯一 ID
   id: string
   // 组件的配置
-  setting: SettingValues
+  setting: KeyValue
 } & Space
 
 export type MovingType = MOVE_TYPE_MOVE | MOVE_TYPE_RESIZE | MOVE_TYPE_NEW | null

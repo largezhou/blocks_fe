@@ -1,8 +1,8 @@
-import { ComponentSetting } from '@/types/common'
+import { ComponentPropsSetting } from '@/components/b-components/types'
 
-const settings: ComponentSetting[] = [
+const settings: ComponentPropsSetting[] = [
   {
-    label: '文本',
+    label: '标签文本',
     componentName: 'AInput',
     propsName: 'label',
     value: '输入框',

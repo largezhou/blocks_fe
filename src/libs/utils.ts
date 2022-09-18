@@ -13,7 +13,8 @@ export const componentId = (name: string) => {
  */
 export const definitionToData = (d: ComponentDefinition): ComponentData => {
   return {
-    name: d.name,
+    showName: d.name,
+    componentName: d.name,
     id: componentId(d.name),
     setting: {},
     width: d.minWidthUnit as number * GRID_WIDTH,

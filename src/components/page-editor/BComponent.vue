@@ -23,7 +23,7 @@ const emits = defineEmits<{
   (e: 'resize', event: MouseEvent, data: ComponentData): void
 }>()
 
-const cd = componentMap[props.data.name]
+const cd = componentMap[props.data.componentName]
 
 // 当组件不存在时，使用 BComponentNotExists 展示，没有任何功能
 const componentName = cd?.name || BComponentNotExists.name

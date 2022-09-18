@@ -1,6 +1,6 @@
-import { ComponentSetting } from '@/types/common'
+import { ComponentPropsSetting } from '@/components/b-components/types'
 
-const settings: ComponentSetting[] = [
+const settings: ComponentPropsSetting[] = [
   {
     label: '时间间隔（毫秒）',
     componentName: 'AInputNumber',
