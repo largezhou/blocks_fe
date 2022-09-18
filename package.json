@@ -11,6 +11,8 @@
     "svgo": "svgo"
   },
   "dependencies": {
+    "@logicflow/core": "^1.1.27",
+    "@logicflow/extension": "^1.1.27",
     "@types/lodash": "^4.14.184",
     "@typescript-eslint/eslint-plugin": "^5.33.1",
     "@typescript-eslint/parser": "^5.33.1",
@@ -24,6 +26,7 @@
     "vite": "^3.0.7",
     "vite-plugin-svg-icons": "^2.0.1",
     "vue": "^3.2.37",
+    "vue-router": "4",
     "vue-tsc": "^0.39.5"
   },
   "web-types": "src/web-types.json"

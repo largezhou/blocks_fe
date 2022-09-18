@@ -110,7 +110,7 @@ useEventListener(document, 'mousemove', (_e: Event) => {
     const cd = componentMap[dc.name]
     isMoving.value = true
     dc.width = Math.max((cd?.minWidthUnit || MIN_WIDTH_UNIT) * GRID_WIDTH, deltaX + startSpace.width)
-    dc.height = Math.max((cd?.minHeightUnit || MIN_HEIGHT_UNIT) * GRID_HEIGHT,  deltaY + startSpace.height)
+    dc.height = Math.max((cd?.minHeightUnit || MIN_HEIGHT_UNIT) * GRID_HEIGHT, deltaY + startSpace.height)
   }
 })
 useEventListener(document, 'mouseup', (_e: Event) => {
@@ -239,6 +239,10 @@ const onSave = () => {
     </ALayoutSider>
     <ALayout class="layout-main">
       <ALayoutHeader class="header">
+        <AButton type="link" class="header-btn">
+          <RouterLink to="/event">事件</RouterLink>
+        </AButton>
+
         <div class="header-right-actions">
           <AButton
             class="header-btn"
@@ -286,6 +290,7 @@ const onSave = () => {
   padding: 16px;
   display: flex;
   flex-wrap: wrap;
+  user-select: none;
 
   ::v-deep(.ant-layout-sider-children) {
     display: flex;
@@ -330,22 +335,5 @@ const onSave = () => {
   background: #d7f7ff;
   border-radius: 2px;
   position: absolute;
-}
-
-.header {
-  padding: 0 16px;
-
-  .header-right-actions {
-    height: 100%;
-    float: right;
-  }
-
-  .header-btn {
-    border: none;
-    border-radius: 0;
-    line-height: normal;
-    height: 100%;
-    min-width: 78px;
-  }
 }
 </style>

@@ -6,12 +6,14 @@ import 'virtual:svg-icons-register'
 import '@/styles/index.less'
 import UIComponents from '@/components/b-components'
 import SettingComponent from '@/components/s-components'
+import router from '@/routes/routes'
 
 const app = createApp(App)
 
 app.use(Antd)
   .use(UIComponents)
   .use(SettingComponent)
+  .use(router)
   .mount('#app')
 
 if (import.meta.env.VITE_ENV !== 'production') {
