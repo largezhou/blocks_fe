@@ -13,10 +13,6 @@ export interface ComponentPropsSetting {
    */
   componentName: string,
   /**
-   * 对应组件的 props 属性，比如 BButton 的 text，type
-   */
-  propsName: string,
-  /**
    * 组件中传递值的 props 名，默认为 value，比如单个 checkbox 的该值应该为 checked
    */
   valueName?: string,
@@ -30,3 +26,5 @@ export interface ComponentPropsSetting {
    */
   setting?: KeyValue,
 }
+
+export type ComponentPropsSettings = KeyValue<ComponentPropsSetting>

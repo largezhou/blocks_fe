@@ -1,5 +1,6 @@
 import { DefineComponent } from 'vue'
-import { ComponentPropsSetting } from '@/components/b-components/types'
+import { ComponentPropsSettings } from '@/components/b-components/types'
+import { EventSetting } from '@/components/event-editor/types'
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomOptions {
@@ -33,7 +34,11 @@ declare module '@vue/runtime-core' {
     /**
      * 组件的配置项描述
      */
-    settings?: ComponentPropsSetting[]
+    settings?: ComponentPropsSettings
+    /**
+     * 事件的进出描述
+     */
+    eventSetting?: EventSetting
   }
 
   interface ComponentCustomProperties {

@@ -2,6 +2,7 @@
 import { ComponentData } from '@/components/page-editor/types'
 import _assign from 'lodash/assign'
 import _keys from 'lodash/keys'
+import _forEach from 'lodash/forEach'
 import { getDefaults } from '@/components/s-components/setting-component-defaults'
 import { computed, watch, reactive } from 'vue'
 import { componentMap } from '@/components/b-components'
@@ -19,7 +20,7 @@ const dc = computed(() => {
   return componentMap[props.componentData?.componentName || -1]
 })
 const settings = computed(() => {
-  return dc.value?.settings || []
+  return dc.value?.settings || {}
 })
 const title = computed(() => {
   return `${dc.value?.showName || '选中组件开始'}配置`
@@ -30,10 +31,9 @@ watch(formData, () => {
 })
 watch(() => props.componentData?.id, () => {
   _keys(formData).forEach((key: string) => delete formData[key])
-
-  for (const setting of settings.value) {
-    formData[setting.propsName] = props.componentData?.setting[setting.propsName] || setting.value
-  }
+  _forEach(settings.value, (setting, propsName) => {
+    formData[propsName] = props.componentData?.setting[propsName] || setting.value
+  })
 }, {
   immediate: true,
 })
@@ -61,15 +61,15 @@ const vBind = (setting: ComponentPropsSetting) => {
         />
       </AFormItem>
       <AFormItem
-        v-for="(s, i) in settings"
-        :key="i"
-        :label="s.label"
+        v-for="(setting, propsName) in settings"
+        :key="propsName"
+        :label="setting.label"
       >
         <component
-          :is="s.componentName"
-          v-bind="vBind(s)"
-          :[getValueName(s)]="formData[s.propsName]"
-          @[getUpdateValueEventName(s)]="(val: unknown) => onUpdateValue(s.propsName, val)"
+          :is="setting.componentName"
+          v-bind="vBind(setting)"
+          :[getValueName(setting)]="formData[propsName]"
+          @[getUpdateValueEventName(setting)]="(val: unknown) => onUpdateValue(propsName, val)"
         />
       </AFormItem>
     </AForm>

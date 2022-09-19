@@ -23,3 +23,11 @@ export const definitionToData = (d: ComponentDefinition): ComponentData => {
     top: 0,
   }
 }
+
+export const getComponentIndexById = (list: ComponentData[], id: string): number => {
+  return list.findIndex((component: ComponentData) => component.id === id)
+}
+
+export const getComponentById = (list: ComponentData[], id: string): ComponentData | undefined => {
+  return list[getComponentIndexById(list, id)]
+}

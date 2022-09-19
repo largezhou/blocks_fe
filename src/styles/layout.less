@@ -45,3 +45,66 @@
   font-weight: 400;
   text-align: center;
 }
+
+@sider-color: #b3b9bf;
+
+.components-panel {
+  padding: 16px;
+  display: flex;
+  flex-wrap: wrap;
+
+  ::v-deep(.ant-layout-sider-children) {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    justify-content: flex-start;
+    width: 100%;
+    align-items: center;
+  }
+
+  .component-item {
+    flex-basis: 50%;
+    display: inline-block;
+    width: 70px;
+    height: 70px;
+    margin: 4px 0;
+    text-align: center;
+    color: @sider-color;
+    user-select: none;
+
+    &:hover {
+      color: #fff;
+    }
+
+    svg {
+      font-size: 25px;
+    }
+
+    .component-name {
+      display: block;
+    }
+  }
+
+  .category {
+    color: @sider-color;
+    border-color: @sider-color;
+  }
+}
+
+.header {
+  padding: 0 16px;
+
+  .header-right-actions {
+    height: 100%;
+    float: right;
+  }
+
+  .header-btn {
+    border: none;
+    border-radius: 0;
+    line-height: normal;
+    height: 100%;
+    min-width: 78px;
+  }
+}

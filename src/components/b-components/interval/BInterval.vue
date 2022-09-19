@@ -15,6 +15,7 @@ export default defineComponent({
 
 <script setup lang="ts">
 import { useInterval } from '@/hooks/common'
+import { getCurrentInstance } from 'vue'
 
 const props = defineProps({
   time: {
@@ -28,7 +29,7 @@ const emits = defineEmits<{
   (e: 'interval'): void
 }>()
 
-useInterval(() => {
+useInterval(getCurrentInstance(), () => {
   emits('interval')
   console.log('BInterval')
 }, props.time)

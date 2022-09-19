@@ -59,6 +59,48 @@ const mockComponentDataList: ComponentData[] = [
     'left': 228,
     'top': 0,
   },
+  {
+    'showName': '测试被修改',
+    'componentName': 'BButton',
+    'id': 'BButton-ieb6r3n2',
+    'setting': {
+      'text': '测试被修改',
+      'type': 'primary',
+      'danger': false,
+      'disabled': false,
+    },
+    'width': 114,
+    'height': 46,
+    'left': 0,
+    'top': 276,
+  },
+  {
+    'showName': '设置为禁用',
+    'componentName': 'BButton',
+    'id': 'BButton-fv83mzvt',
+    'setting': {
+      'text': '设置为禁用',
+      'type': 'primary',
+      'danger': false,
+      'disabled': false,
+    },
+    'width': 114,
+    'height': 46,
+    'left': 0,
+    'top': 207,
+  },
+  {
+    'showName': '重置按钮',
+    'componentName': 'BTimeout',
+    'id': 'BTimeout-p50w64tc',
+    'setting': {
+      'time': 2000,
+    },
+    'width': 0,
+    'height': 0,
+    'left': 228,
+    'top': 322,
+  },
 ]
 
 export default mockComponentDataList

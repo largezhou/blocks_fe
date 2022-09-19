@@ -5,20 +5,22 @@
 import BButton from '@/components/b-components/button/BButton.vue'
 import BInput from '@/components/b-components/input/BInput.vue'
 import BInterval from '@/components/b-components/interval/BInterval.vue'
+import BTimeout from '@/components/b-components/timeout/BTimeout.vue'
 import { ComponentDefinition } from '@/types/vue'
 import { App } from 'vue'
 import _groupBy from 'lodash/groupBy'
-import { Dictionary } from '@/types/common'
 import { ComponentData } from '@/components/page-editor/types'
 import BComponentNotExists from '@/components/b-components/component-not-exists/BComponentNotExists.vue'
+import { KeyValue } from '@/types/common'
 
-export const componentMap: Record<string, ComponentDefinition> = {
+export const componentMap: KeyValue<ComponentDefinition | undefined> = {
   BButton,
   BInput,
   BInterval,
+  BTimeout,
 }
 
-export const components: ComponentDefinition[] = Object.values(componentMap)
+export const components: ComponentDefinition[] = Object.values(componentMap as KeyValue<ComponentDefinition>)
 
 /**
  * 有长宽的，属于 UI 组件，会在页面上显示出来
@@ -32,7 +34,7 @@ export const componentHasUi = (data: ComponentData): boolean => {
 /**
  * 按分类分组后的组件
  */
-export const groupComponents: Dictionary<ComponentDefinition[]> = _groupBy(components, (component) => {
+export const groupComponents: KeyValue<ComponentDefinition[]> = _groupBy(components, (component) => {
   return component.category?.trim() || '其他'
 })
 

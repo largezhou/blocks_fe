@@ -3,8 +3,9 @@
  */
 
 import { Defaults } from '@/components/s-components/types'
+import { KeyValue } from '@/types/common'
 
-const defaults: Record<string, Defaults> = {
+const defaults: KeyValue<Defaults | undefined> = {
   ASelect: {},
   ACheckbox: {},
   AInput: {

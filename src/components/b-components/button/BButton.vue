@@ -10,6 +10,30 @@ export default defineComponent({
   icon: 'button',
   category: '通用',
   settings,
+  eventSetting: {
+    action: {
+      changeText: {
+        showName: '文本',
+        prop: 'text',
+      },
+      changeDisabledToTrue: {
+        showName: '设置为禁用',
+        prop: 'disabled',
+        value: true,
+      },
+      changeDisabledToFalse: {
+        showName: '设置为可用',
+        prop: 'disabled',
+        value: false,
+      },
+    },
+    trigger: {
+      click: {
+        showName: '点击',
+        event: 'click',
+      },
+    },
+  },
 })
 </script>
 
@@ -54,6 +78,5 @@ const onClick = (e: MouseEvent) => {
 .b-button.ant-btn {
   width: 100%;
   height: 100%;
-  overflow-x: hidden;
 }
 </style>

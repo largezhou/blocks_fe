@@ -1,16 +1,14 @@
-import { ComponentPropsSetting } from '@/components/b-components/types'
+import { ComponentPropsSettings } from '@/components/b-components/types'
 
-const settings: ComponentPropsSetting[] = [
-  {
+const settings: ComponentPropsSettings = {
+  text: {
     label: '文本',
     componentName: 'AInput',
-    propsName: 'text',
     value: '按钮',
   },
-  {
+  type: {
     label: '颜色',
     componentName: 'ASelect',
-    propsName: 'type',
     value: 'primary',
     setting: {
       options: [
@@ -29,20 +27,18 @@ const settings: ComponentPropsSetting[] = [
       ],
     },
   },
-  {
+  danger: {
     label: '设置为危险按钮',
     componentName: 'ACheckbox',
-    propsName: 'danger',
     valueName: 'checked',
     value: false,
   },
-  {
+  disabled: {
     label: '禁用',
     componentName: 'ACheckbox',
-    propsName: 'disabled',
     valueName: 'checked',
     value: false,
   },
-]
+}
 
 export default settings

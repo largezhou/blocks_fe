@@ -1,50 +1,43 @@
-import { ComponentPropsSetting } from '@/components/b-components/types'
+import { ComponentPropsSettings } from '@/components/b-components/types'
 
-const settings: ComponentPropsSetting[] = [
-  {
+const settings: ComponentPropsSettings = {
+  label: {
     label: '标签文本',
     componentName: 'AInput',
-    propsName: 'label',
     value: '输入框',
   },
-  {
+  name: {
     label: '数据字段名',
     componentName: 'AInput',
-    propsName: 'name',
     value: 'input',
   },
-  {
+  value: {
     label: '默认值',
     componentName: 'AInput',
-    propsName: 'value',
     value: null,
   },
-  {
+  extra: {
     label: '下方提示信息',
     componentName: 'AInput',
-    propsName: 'extra',
     value: '',
   },
-  {
+  placeholder: {
     label: '提示信息',
     componentName: 'AInput',
-    propsName: 'placeholder',
     value: '请输入...',
   },
-  {
+  allowClear: {
     label: '是否可清除',
     componentName: 'ACheckbox',
-    propsName: 'allowClear',
     valueName: 'checked',
     value: true,
   },
-  {
+  disabled: {
     label: '禁用',
     componentName: 'ACheckbox',
-    propsName: 'disabled',
     valueName: 'checked',
     value: false,
   },
-]
+}
 
 export default settings

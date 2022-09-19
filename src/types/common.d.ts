@@ -1,5 +1,1 @@
-export type Dictionary<T> = {
-  [key: string]: T
-}
-
-export type KeyValue = Record<string, unknown>
+export type KeyValue<T = unknown> = Record<string, T>

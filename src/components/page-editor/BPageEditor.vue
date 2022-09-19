@@ -17,10 +17,11 @@ import {
   EDITOR_LEFT, EDITOR_TOP,
   DRAGGING_MOUSE_OFFSET,
   GRID_WIDTH, GRID_HEIGHT,
-  MOVE_TYPE_NEW, MOVE_TYPE_MOVE, MOVE_TYPE_RESIZE, MIN_WIDTH_UNIT, MIN_HEIGHT_UNIT,
+  MOVE_TYPE_NEW, MOVE_TYPE_MOVE, MOVE_TYPE_RESIZE,
+  MIN_WIDTH_UNIT, MIN_HEIGHT_UNIT,
 } from '@/libs/consts'
 import BComponent from '@/components/page-editor/BComponent.vue'
-import { definitionToData } from '@/libs/utils'
+import { definitionToData, getComponentById, getComponentIndexById } from '@/libs/utils'
 import BSettings from '@/components/page-editor/BSettings.vue'
 import mockComponentDataList from '@/components/page-editor/mock-component-data-list'
 import { KeyValue } from '@/types/common'
@@ -83,7 +84,7 @@ const stop = () => {
 useEventListener(document, 'mousemove', (_e: Event) => {
   const dc = draggingComponent.value
 
-  if (!dc) {
+  if (dc === null) {
     return
   }
 
@@ -185,16 +186,10 @@ const onStartMove = (e: MouseEvent, component: ComponentData) => {
   selectedComponent.value = component
   startMove(e, component, MOVE_TYPE_MOVE)
 }
-const getComponentIndexById = (id: string): number => {
-  return componentDataList.value.findIndex((component: ComponentData) => component.id === id)
-}
-const getComponentById = (id: string): ComponentData | undefined => {
-  return componentDataList.value[getComponentIndexById(id)]
-}
 useEventListener(document, 'keydown', (_e: Event) => {
   const e = _e as KeyboardEvent
   if (selectedComponent.value && e.key === 'Delete') {
-    const i = getComponentIndexById(selectedComponent.value.id)
+    const i = getComponentIndexById(componentDataList.value, selectedComponent.value.id)
     componentDataList.value.splice(i, 1)
     selectedComponent.value = null
   }
@@ -205,12 +200,12 @@ const onStartResize = (e: MouseEvent, component: ComponentData) => {
 }
 // 更新组件数据中的 setting 值
 const onUpdateSettingValues = (setting: KeyValue) => {
-  if (!selectedComponent.value) {
+  if (selectedComponent.value === null) {
     return
   }
 
-  const cd = getComponentById(selectedComponent.value.id)
-  if (!cd) {
+  const cd = getComponentById(componentDataList.value, selectedComponent.value.id)
+  if (cd === undefined) {
     return
   }
 
@@ -218,11 +213,16 @@ const onUpdateSettingValues = (setting: KeyValue) => {
 }
 
 const onUpdateShowName = (val: string) => {
-  if (!selectedComponent.value) {
+  if (selectedComponent.value === null) {
     return
   }
 
-  selectedComponent.value.showName = val
+  const cd = getComponentById(componentDataList.value, selectedComponent.value.id)
+  if (cd === undefined) {
+    return
+  }
+
+  cd.showName = val
 }
 
 const onSave = () => {
@@ -290,72 +290,9 @@ const onSave = () => {
 <style scoped lang="less">
 @import '@/styles/layout.less';
 
-@sider-color: #b3b9bf;
-
-.components-panel {
-  padding: 16px;
-  display: flex;
-  flex-wrap: wrap;
-
-  ::v-deep(.ant-layout-sider-children) {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-content: flex-start;
-    justify-content: flex-start;
-    width: 100%;
-    align-items: center;
-  }
-
-  .component-item {
-    flex-basis: 50%;
-    display: inline-block;
-    width: 70px;
-    height: 70px;
-    margin: 4px 0;
-    text-align: center;
-    color: @sider-color;
-    user-select: none;
-
-    &:hover {
-      color: #fff;
-    }
-
-    svg {
-      font-size: 25px;
-    }
-
-    .component-name {
-      display: block;
-    }
-  }
-
-  .category {
-    color: @sider-color;
-    border-color: @sider-color;
-  }
-}
-
 .b-placeholder {
   background: #d7f7ff;
   border-radius: 2px;
   position: absolute;
-}
-
-.header {
-  padding: 0 16px;
-
-  .header-right-actions {
-    height: 100%;
-    float: right;
-  }
-
-  .header-btn {
-    border: none;
-    border-radius: 0;
-    line-height: normal;
-    height: 100%;
-    min-width: 78px;
-  }
 }
 </style>

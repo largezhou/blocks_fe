@@ -24,6 +24,7 @@
     "vite": "^3.0.7",
     "vite-plugin-svg-icons": "^2.0.1",
     "vue": "^3.2.37",
+    "vue-router": "4",
     "vue-tsc": "^0.39.5"
   },
   "web-types": "src/web-types.json"
