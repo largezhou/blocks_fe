@@ -54,7 +54,7 @@ const vBind = (setting: ComponentPropsSetting) => {
 <template>
   <ACard :title="title" class="b-settings">
     <AForm layout="vertical">
-      <AFormItem v-if="componentData" label="展示名称">
+      <AFormItem v-if="componentData" label="展示名称" extra="用于编辑时的查看和区分">
         <AInput
           :value="props.componentData?.showName"
           @update:value="(val: string) => $emit('updateShowName', val)"

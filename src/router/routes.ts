@@ -1,16 +1,10 @@
-import BPageEditor from '@/components/page-editor/BPageEditor.vue'
-import BEventTester from '@/components/event-editor/BEventTester.vue'
-
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
+import BEditor from '@/components/editor/BEditor.vue'
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    component: BPageEditor,
-  },
-  {
-    path: '/test',
-    component: BEventTester,
+    component: BEditor,
   },
 ]
 

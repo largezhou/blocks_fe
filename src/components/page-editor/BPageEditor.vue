@@ -23,8 +23,19 @@ import {
 import BComponent from '@/components/page-editor/BComponent.vue'
 import { definitionToData, getComponentById, getComponentIndexById } from '@/libs/utils'
 import BSettings from '@/components/page-editor/BSettings.vue'
-import mockComponentDataList from '@/components/page-editor/mock-component-data-list'
 import { KeyValue } from '@/types/common'
+import BLayout from '@/components/layout/BLayout.vue'
+import BChangeMode from '@/components/editor/BChangeMode.vue'
+
+const props = defineProps<{
+  // 页面上的所有组件列表
+  componentDataList: ComponentData[]
+}>()
+
+const emits = defineEmits<{
+  (e: 'add', data: ComponentData): void
+  (e: 'remove', index: number): void
+}>()
 
 // 正在拖动的组件
 const draggingComponent = ref<ComponentData | null>(null)
@@ -44,10 +55,8 @@ const mouseOffset: Position = {
 }
 // 组件是否正在移动
 const isMoving = ref(false)
-// 页面上的所有组件列表
-const componentDataList = ref<ComponentData[]>(mockComponentDataList)
 const uiComponentDataList = computed(() => {
-  return componentDataList.value.filter(componentHasUi)
+  return props.componentDataList.filter(componentHasUi)
 })
 // 当前选中的组件
 const selectedComponent = shallowRef<ComponentData | null>(null)
@@ -112,7 +121,7 @@ useEventListener(document, 'mousemove', (_e: Event) => {
     const cd = componentMap[dc.componentName]
     isMoving.value = true
     dc.width = Math.max((cd?.minWidthUnit || MIN_WIDTH_UNIT) * GRID_WIDTH, deltaX + startSpace.width)
-    dc.height = Math.max((cd?.minHeightUnit || MIN_HEIGHT_UNIT) * GRID_HEIGHT,  deltaY + startSpace.height)
+    dc.height = Math.max((cd?.minHeightUnit || MIN_HEIGHT_UNIT) * GRID_HEIGHT, deltaY + startSpace.height)
   }
 })
 useEventListener(document, 'mouseup', (_e: Event) => {
@@ -131,7 +140,7 @@ useEventListener(document, 'mouseup', (_e: Event) => {
   c.height = ps.height
 
   if (curType.value === MOVE_TYPE_NEW) {
-    componentDataList.value.push({ ...c })
+    emits('add', { ...c })
   }
   selectedComponent.value = c
   stop()
@@ -189,8 +198,8 @@ const onStartMove = (e: MouseEvent, component: ComponentData) => {
 useEventListener(document, 'keydown', (_e: Event) => {
   const e = _e as KeyboardEvent
   if (selectedComponent.value && e.key === 'Delete') {
-    const i = getComponentIndexById(componentDataList.value, selectedComponent.value.id)
-    componentDataList.value.splice(i, 1)
+    const i = getComponentIndexById(props.componentDataList, selectedComponent.value.id)
+    emits('remove', i)
     selectedComponent.value = null
   }
 })
@@ -204,7 +213,7 @@ const onUpdateSettingValues = (setting: KeyValue) => {
     return
   }
 
-  const cd = getComponentById(componentDataList.value, selectedComponent.value.id)
+  const cd = getComponentById(props.componentDataList, selectedComponent.value.id)
   if (cd === undefined) {
     return
   }
@@ -217,7 +226,7 @@ const onUpdateShowName = (val: string) => {
     return
   }
 
-  const cd = getComponentById(componentDataList.value, selectedComponent.value.id)
+  const cd = getComponentById(props.componentDataList, selectedComponent.value.id)
   if (cd === undefined) {
     return
   }
@@ -226,13 +235,13 @@ const onUpdateShowName = (val: string) => {
 }
 
 const onSave = () => {
-  console.log(JSON.stringify(componentDataList.value, null, 2))
+  console.log(JSON.stringify(props.componentDataList, null, 2))
 }
 </script>
 
 <template>
-  <ALayout class="layout" has-sider>
-    <ALayoutSider class="sider components-panel">
+  <BLayout>
+    <template #sider>
       <template v-for="(components, category) in groupComponents" :key="category">
         <ADivider class="category">{{ category }}</ADivider>
         <div
@@ -245,54 +254,99 @@ const onSave = () => {
           <span class="component-name">{{ component.showName }}</span>
         </div>
       </template>
-    </ALayoutSider>
-    <ALayout class="layout-main">
-      <ALayoutHeader class="header">
-        <div class="header-right-actions">
-          <AButton
-            class="header-btn"
-            type="primary"
-            @click="onSave"
-          >
-            保存
-          </AButton>
-        </div>
-      </ALayoutHeader>
-      <ALayoutContent class="content">
-        <div class="content-1">
-          <div class="content-2">
-            <div class="b-placeholder" :style="placeholderSpaceStyles"/>
+    </template>
+
+    <template #header>
+      <BChangeMode/>
+    </template>
+
+    <template #header-right-actions>
+      <AButton
+        class="header-btn"
+        type="primary"
+        @click="onSave"
+      >
+        保存
+      </AButton>
+    </template>
+
+    <template #content>
+      <div class="content-1">
+        <div class="content-2">
+          <div class="b-placeholder" :style="placeholderSpaceStyles"/>
+          <BComponent
+            v-if="curType === MOVE_TYPE_NEW && isMoving && draggingComponent !== null"
+            :data="draggingComponent"
+          />
+          <template v-for="componentData in uiComponentDataList" :key="componentData.id">
             <BComponent
-              v-if="curType === MOVE_TYPE_NEW && isMoving && draggingComponent !== null"
-              :data="draggingComponent"
+              :data="componentData"
+              :selected-id="selectedComponent?.id"
+              @mousedown.stop="onStartMove($event, componentData)"
+              @resize="onStartResize"
             />
-            <template v-for="componentData in uiComponentDataList" :key="componentData.id">
-              <BComponent
-                :data="componentData"
-                :selected-id="selectedComponent?.id"
-                @mousedown.stop="onStartMove($event, componentData)"
-                @resize="onStartResize"
-              />
-            </template>
-          </div>
+          </template>
         </div>
-        <BSettings
-          :component-data="selectedComponent"
-          @update:setting-values="onUpdateSettingValues"
-          @update-show-name="onUpdateShowName"
-        />
-      </ALayoutContent>
-      <ALayoutFooter class="footer">BLOCKS</ALayoutFooter>
-    </ALayout>
-  </ALayout>
+      </div>
+      <BSettings
+        :component-data="selectedComponent"
+        @update:setting-values="onUpdateSettingValues"
+        @update-show-name="onUpdateShowName"
+      />
+    </template>
+  </BLayout>
 </template>
 
 <style scoped lang="less">
-@import '@/styles/layout.less';
-
 .b-placeholder {
   background: #d7f7ff;
   border-radius: 2px;
   position: absolute;
+}
+
+@sider-color: #b3b9bf;
+
+::v-deep(.ant-layout-sider) {
+  padding: 16px;
+  display: flex;
+  flex-wrap: wrap;
+
+  .ant-layout-sider-children {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    justify-content: flex-start;
+    width: 100%;
+    align-items: center;
+  }
+
+  .component-item {
+    flex-basis: 50%;
+    display: inline-block;
+    width: 70px;
+    height: 70px;
+    margin: 4px 0;
+    text-align: center;
+    color: @sider-color;
+    user-select: none;
+
+    &:hover {
+      color: #fff;
+    }
+
+    svg {
+      font-size: 25px;
+    }
+
+    .component-name {
+      display: block;
+    }
+  }
+
+  .category {
+    color: @sider-color;
+    border-color: @sider-color;
+  }
 }
 </style>

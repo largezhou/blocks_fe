@@ -31,3 +31,8 @@ export const DRAGGING_MOUSE_OFFSET = 10
 export const MOVE_TYPE_MOVE = 'move'
 export const MOVE_TYPE_RESIZE = 'resize'
 export const MOVE_TYPE_NEW = 'new'
+
+// 编辑器模式
+export const EDITOR_MODE_PAGE = 'page'
+export const EDITOR_MODE_EVENT = 'event'
+export const EDITOR_MODE_TESTER = 'tester'

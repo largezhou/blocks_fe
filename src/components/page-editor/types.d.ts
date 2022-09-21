@@ -1,4 +1,7 @@
-import { MOVE_TYPE_MOVE, MOVE_TYPE_RESIZE, MOVE_TYPE_NEW } from '@/libs/consts'
+import {
+  MOVE_TYPE_MOVE, MOVE_TYPE_RESIZE, MOVE_TYPE_NEW,
+  EDITOR_MODE_PAGE, EDITOR_MODE_EVENT, EDITOR_MODE_TESTER,
+} from '@/libs/consts'
 import { KeyValue } from '@/types/common'
 
 // 位置
@@ -29,3 +32,5 @@ export type ComponentData = {
 } & Space
 
 export type MovingType = MOVE_TYPE_MOVE | MOVE_TYPE_RESIZE | MOVE_TYPE_NEW | null
+
+export type EditorMode = EDITOR_MODE_PAGE | EDITOR_MODE_EVENT | EDITOR_MODE_TESTER

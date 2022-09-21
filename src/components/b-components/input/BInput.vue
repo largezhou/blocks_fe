@@ -9,6 +9,7 @@ export default defineComponent({
   minHeightUnit: 4,
   icon: 'input',
   category: '输入',
+  showNameAs: 'label',
   settings,
 })
 </script>
