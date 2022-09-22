@@ -298,55 +298,16 @@ const onSave = () => {
 </template>
 
 <style scoped lang="less">
+@import '@/styles/var.less';
+
 .b-placeholder {
   background: #d7f7ff;
   border-radius: 2px;
   position: absolute;
 }
 
-@sider-color: #b3b9bf;
-
-::v-deep(.ant-layout-sider) {
-  padding: 16px;
-  display: flex;
-  flex-wrap: wrap;
-
-  .ant-layout-sider-children {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-content: flex-start;
-    justify-content: flex-start;
-    width: 100%;
-    align-items: center;
-  }
-
-  .component-item {
-    flex-basis: 50%;
-    display: inline-block;
-    width: 70px;
-    height: 70px;
-    margin: 4px 0;
-    text-align: center;
-    color: @sider-color;
-    user-select: none;
-
-    &:hover {
-      color: #fff;
-    }
-
-    svg {
-      font-size: 25px;
-    }
-
-    .component-name {
-      display: block;
-    }
-  }
-
-  .category {
-    color: @sider-color;
-    border-color: @sider-color;
-  }
+.category {
+  color: @sider-color;
+  border-color: @sider-color;
 }
 </style>

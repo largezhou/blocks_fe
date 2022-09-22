@@ -8,7 +8,7 @@ export default defineComponent({
 
 <script setup lang="ts">
 import mockPageData from '@/components/editor/mock-page-data'
-import { ref } from 'vue'
+import { reactive } from 'vue'
 import BPageEditor from '@/components/page-editor/BPageEditor.vue'
 import { ComponentData } from '@/components/page-editor/types'
 import { EDITOR_MODE_PAGE, EDITOR_MODE_EVENT, EDITOR_MODE_TESTER } from '@/libs/consts'
@@ -16,8 +16,8 @@ import BTester from '@/components/editor/BTester.vue'
 import BEventEditor from '@/components/event-editor/BEventEditor.vue'
 import useChangeMode from '@/components/editor/useChangeMode'
 
-const pageData = ref(mockPageData)
-const componentDataList = pageData.value.components
+const pageData = reactive(mockPageData)
+const componentDataList = pageData.components
 
 const { currentMode } = useChangeMode()
 
@@ -38,7 +38,7 @@ const onRemoveComponent = (index: number) => {
   />
   <BEventEditor
     v-show="currentMode === EDITOR_MODE_EVENT"
-    :page="pageData"
+    :page-data="pageData"
   />
   <BTester
     v-if="currentMode === EDITOR_MODE_TESTER"

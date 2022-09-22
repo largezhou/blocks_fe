@@ -20,16 +20,16 @@ import BLayout from '@/components/layout/BLayout.vue'
 import BChangeMode from '@/components/editor/BChangeMode.vue'
 
 const props = defineProps<{
-  pageData?: PageData
+  pageData: PageData
 }>()
 
 const compRefMap = ref<KeyValue<ComponentPublicInstance | undefined>>({})
 // 页面组件信息，避免修改传进来的数据，简单深拷贝一下
-const components = JSON.parse(JSON.stringify(props.pageData?.components || []))
+const components = JSON.parse(JSON.stringify(props.pageData.components || []))
 // 所有组件的 ID 到 组件配置的映射
 const componentSettingMap = ref<KeyValue<KeyValue>>({})
 // 事件配置
-const events = JSON.parse(JSON.stringify(props.pageData?.events || []))
+const events = JSON.parse(JSON.stringify(props.pageData.events || []))
 /**
  * 组件 ID 到组件事件的回调函数数组
  *
@@ -76,7 +76,10 @@ for (const component of components) {
 
 const initEventFlow = () => {
   for (const e of events) {
-    const { trigger } = e
+    const { trigger, action } = e
+    if (!trigger.id || !trigger.event || !action.id || !action.action) {
+      continue
+    }
 
     const triggerRef = compRefMap.value[trigger.id]
     if (triggerRef === undefined) {
@@ -92,7 +95,6 @@ const initEventFlow = () => {
       console.warn(`触发组件, ID: ${trigger.id}, componentName: ${triggerRef.$.type.name}, 可能没有事件: ${trigger.event}`)
     }
 
-    const { action } = e
     const actionRef = compRefMap.value[action.id]
     if (actionRef === undefined) {
       console.warn(`动作组件, ID: ${trigger.id}, 找不到组件`)

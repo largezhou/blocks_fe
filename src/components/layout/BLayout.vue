@@ -29,6 +29,8 @@ export default defineComponent({
 </template>
 
 <style scoped lang="less">
+@import '@/styles/var.less';
+
 .layout {
   min-height: 100%;
   position: relative;
@@ -82,6 +84,45 @@ export default defineComponent({
   .header-right-actions {
     height: 100%;
     float: right;
+  }
+}
+
+::v-deep(.ant-layout-sider) {
+  padding: 16px;
+  display: flex;
+  flex-wrap: wrap;
+
+  .ant-layout-sider-children {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    justify-content: flex-start;
+    width: 100%;
+    align-items: center;
+  }
+
+  .component-item {
+    flex-basis: 50%;
+    display: inline-block;
+    width: 70px;
+    height: 70px;
+    margin: 4px 0;
+    text-align: center;
+    color: @sider-color;
+    user-select: none;
+
+    &:hover {
+      color: #fff;
+    }
+
+    svg {
+      font-size: 25px;
+    }
+
+    .component-name {
+      display: block;
+    }
   }
 }
 </style>

@@ -11,6 +11,7 @@
     "svgo": "svgo"
   },
   "dependencies": {
+    "@ant-design/icons-vue": "^6.1.0",
     "@types/lodash": "^4.14.184",
     "@typescript-eslint/eslint-plugin": "^5.33.1",
     "@typescript-eslint/parser": "^5.33.1",
