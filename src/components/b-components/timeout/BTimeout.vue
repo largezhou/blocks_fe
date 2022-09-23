@@ -1,29 +1,16 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
-import settings from './settings'
+import { settings, eventSetting } from './settings'
 
 export default defineComponent({
   name: 'BTimeout',
-  showName: '定时器',
+  showName: '延迟执行',
   icon: 'timeout',
   category: '功能',
   minHeightUnit: 0,
   minWidthUnit: 0,
   settings,
-  eventSetting: {
-    action: {
-      startTimeout: {
-        showName: '开始倒计时',
-        method: 'startTimeout',
-      },
-    },
-    trigger: {
-      timeout: {
-        showName: '倒计时结束',
-        event: 'timeout',
-      },
-    },
-  },
+  eventSetting,
 })
 </script>
 

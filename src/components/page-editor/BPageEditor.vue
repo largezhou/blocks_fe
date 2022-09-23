@@ -7,9 +7,9 @@ export default defineComponent({
 </script>
 
 <script setup lang="ts">
-import { componentHasUi, groupComponents, componentMap } from '@/components/b-components'
+import { groupComponents, componentMap } from '@/components/b-components'
 import BSvgIcon from '@/components/svg-icon/BSvgIcon.vue'
-import { ref, computed, shallowRef } from 'vue'
+import { ref, computed } from 'vue'
 import { useEventListener } from '@/hooks/common'
 import { Position, ComponentData, Space, MovingType } from '@/components/page-editor/types'
 import {
@@ -55,11 +55,14 @@ const mouseOffset: Position = {
 }
 // 组件是否正在移动
 const isMoving = ref(false)
-const uiComponentDataList = computed(() => {
-  return props.componentDataList.filter(componentHasUi)
-})
+// 当前选中组件 ID
+const selectedId = ref<string>()
 // 当前选中的组件
-const selectedComponent = shallowRef<ComponentData | null>(null)
+const selectedComponent = computed(() => {
+  return selectedId.value
+    ? getComponentById(props.componentDataList, selectedId.value)
+    : undefined
+})
 
 const onStartNew = (e: MouseEvent, component: ComponentData) => {
   startMove(e, component, MOVE_TYPE_NEW)
@@ -142,7 +145,7 @@ useEventListener(document, 'mouseup', (_e: Event) => {
   if (curType.value === MOVE_TYPE_NEW) {
     emits('add', { ...c })
   }
-  selectedComponent.value = c
+  selectedId.value = c.id
   stop()
 })
 
@@ -192,15 +195,15 @@ const placeholderSpaceStyles = computed(() => {
 })
 
 const onStartMove = (e: MouseEvent, component: ComponentData) => {
-  selectedComponent.value = component
+  selectedId.value = component.id
   startMove(e, component, MOVE_TYPE_MOVE)
 }
 useEventListener(document, 'keydown', (_e: Event) => {
   const e = _e as KeyboardEvent
-  if (selectedComponent.value && e.key === 'Delete') {
-    const i = getComponentIndexById(props.componentDataList, selectedComponent.value.id)
+  if (selectedId.value && e.key === 'Delete') {
+    const i = getComponentIndexById(props.componentDataList, selectedId.value)
     emits('remove', i)
-    selectedComponent.value = null
+    selectedId.value = undefined
   }
 })
 
@@ -209,29 +212,15 @@ const onStartResize = (e: MouseEvent, component: ComponentData) => {
 }
 // 更新组件数据中的 setting 值
 const onUpdateSettingValues = (setting: KeyValue) => {
-  if (selectedComponent.value === null) {
-    return
+  if (selectedId.value && selectedComponent.value) {
+    selectedComponent.value.setting = setting
   }
-
-  const cd = getComponentById(props.componentDataList, selectedComponent.value.id)
-  if (cd === undefined) {
-    return
-  }
-
-  cd.setting = setting
 }
 
 const onUpdateShowName = (val: string) => {
-  if (selectedComponent.value === null) {
-    return
+  if (selectedId.value && selectedComponent.value) {
+    selectedComponent.value.showName = val
   }
-
-  const cd = getComponentById(props.componentDataList, selectedComponent.value.id)
-  if (cd === undefined) {
-    return
-  }
-
-  cd.showName = val
 }
 
 const onSave = () => {
@@ -273,15 +262,15 @@ const onSave = () => {
     <template #content>
       <div class="content-1">
         <div class="content-2">
-          <div class="b-placeholder" :style="placeholderSpaceStyles"/>
+          <div class="placeholder" :style="placeholderSpaceStyles"/>
           <BComponent
             v-if="curType === MOVE_TYPE_NEW && isMoving && draggingComponent !== null"
             :data="draggingComponent"
           />
-          <template v-for="componentData in uiComponentDataList" :key="componentData.id">
+          <template v-for="componentData in componentDataList" :key="componentData.id">
             <BComponent
               :data="componentData"
-              :selected-id="selectedComponent?.id"
+              :selected-id="selectedId"
               @mousedown.stop="onStartMove($event, componentData)"
               @resize="onStartResize"
             />
@@ -300,7 +289,7 @@ const onSave = () => {
 <style scoped lang="less">
 @import '@/styles/var.less';
 
-.b-placeholder {
+.placeholder {
   background: #d7f7ff;
   border-radius: 2px;
   position: absolute;

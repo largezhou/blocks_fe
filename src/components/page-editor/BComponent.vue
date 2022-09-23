@@ -45,7 +45,10 @@ const isSelected = computed(() => props.selectedId === props.data.id)
 <template>
   <div
     class="b-component"
-    :class="{ 'b-selected': isSelected }"
+    :class="{
+      selected: isSelected,
+      hidden: data?.setting?.controlHidden,
+    }"
     :style="spaceStyles"
   >
     <component
@@ -53,10 +56,7 @@ const isSelected = computed(() => props.selectedId === props.data.id)
       v-if="hasUI"
       v-bind="data?.setting"
     />
-    <BSvgIcon
-      v-else
-      :name="`component-${cd?.icon || '_default'}`"
-    />
+    <BSvgIcon v-else :name="`component-${cd?.icon || '_default'}`"/>
     <div class="b-resizer" @mousedown.stop="emits('resize', $event, data)"/>
   </div>
 </template>
@@ -73,13 +73,17 @@ const isSelected = computed(() => props.selectedId === props.data.id)
   padding: @component-padding;
   border-radius: 2px;
 
-  &.b-selected {
+  &.selected {
     border: @selected-border #bae7ff solid;
     padding: @selected-padding;
 
     .b-resizer {
       display: block;
     }
+  }
+
+  &.hidden {
+    opacity: 0.3;
   }
 
   .b-resizer {

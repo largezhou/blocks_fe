@@ -18,24 +18,10 @@ const props = defineProps<{
   pageData: PageData
 }>()
 
-const onRemove = (index: number) => {
-  // eslint-disable-next-line vue/no-mutating-props
-  props.pageData.events.splice(index, 1)
-}
-
-const onAdd = (index: number) => {
-  // eslint-disable-next-line vue/no-mutating-props
-  props.pageData.events.splice(index + 1, 0, {
-    trigger: {
-      id: '',
-      event: '',
-    },
-    action: {
-      id: '',
-      action: '',
-    },
-  })
-}
+defineEmits<{
+  (e: 'remove', index: number): void
+  (e: 'add', index: number): void
+}>()
 
 const getKey = (index: number) => {
   return Symbol(index)
@@ -82,12 +68,12 @@ const onSave = () => {
               :key="getKey(index)"
               :event="event"
               :page-data="pageData"
-              @remove="onRemove(index)"
-              @add="onAdd(index)"
+              @remove="$emit('remove', index)"
+              @add="$emit('add', index)"
             />
           </div>
           <div style="text-align: center; margin-top: 10px;">
-            <AButton type="primary" @click="onAdd(pageData.events.length - 1)">添加事件</AButton>
+            <AButton type="primary" @click="$emit('add', pageData.events.length - 1)">添加事件</AButton>
           </div>
         </div>
       </div>

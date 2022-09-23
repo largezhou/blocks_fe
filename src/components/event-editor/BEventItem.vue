@@ -14,6 +14,7 @@ import { getComponentById } from '@/libs/utils'
 import { componentMap } from '@/components/b-components'
 import _map from 'lodash/map'
 import { PlusOutlined, MinusOutlined } from '@ant-design/icons-vue'
+import { commonActions } from '@/components/event-editor'
 
 const props = defineProps<{
   pageData: PageData
@@ -52,8 +53,18 @@ const componentTriggerOptions = computed(() => {
 })
 
 const componentActionOptions = computed(() => {
-  const setting = getComponentDefByComponentId(data.action.id)?.eventSetting?.action || {}
-  return _map(setting, (s, key) => ({ label: s.showName, value: key }))
+  const cd = getComponentDefByComponentId(data.action.id)
+  if (!cd) {
+    return []
+  }
+  const setting = cd.eventSetting?.action || {}
+  let options = _map(setting, (s, key) => ({ label: s.showName, value: key }))
+
+  if (cd.settings?.controlHidden !== undefined) {
+    options = options.concat(_map(commonActions.controlHidden, (s, key) => ({ label: s.showName, value: key })))
+  }
+
+  return options
 })
 </script>
 
@@ -76,7 +87,7 @@ const componentActionOptions = computed(() => {
           :options="componentTriggerOptions"
         />
       </AFormItem>
-      <AFormItem label="组件">
+      <AFormItem label="通知">
         <ASelect
           v-model:value="data.action.id"
           show-search
@@ -84,7 +95,7 @@ const componentActionOptions = computed(() => {
           :options="componentSelectOptions"
         />
       </AFormItem>
-      <AFormItem label="将执行">
+      <AFormItem label="执行">
         <ASelect
           v-model:value="data.action.action"
           show-search

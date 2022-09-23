@@ -1,6 +1,6 @@
 import { KeyValue } from '@/types/common'
 
-interface SettingAction {
+export interface SettingAction {
   showName: string,
   // 修改的 prop 名
   prop?: string,

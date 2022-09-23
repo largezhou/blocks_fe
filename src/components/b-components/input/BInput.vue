@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
-import settings from './settings'
+import { settings, eventSetting } from './settings'
 
 export default defineComponent({
   name: 'BInput',
@@ -11,11 +11,14 @@ export default defineComponent({
   category: '输入',
   showNameAs: 'label',
   settings,
+  eventSetting,
 })
 </script>
 
 <script setup lang="ts">
-withDefaults(
+import { ref, watch } from 'vue'
+
+const props = withDefaults(
   defineProps<{
     label?: string,
     name?: string,
@@ -35,13 +38,30 @@ withDefaults(
     disabled: false,
   },
 )
+
+const emits = defineEmits<{
+  (e: 'change'): void
+}>()
+
+const inputValue = ref(props.value)
+watch(inputValue, () => {
+  emits('change')
+})
+
+const clear = () => {
+  inputValue.value = null
+}
+
+defineExpose({
+  clear,
+})
 </script>
 
 <template>
   <div class="b-input ant-form ant-form-vertical">
     <AFormItem :label="label" :extra="extra">
       <AInput
-        :value="value"
+        v-model:value="inputValue"
         :allow-clear="allowClear"
         :placeholder="placeholder"
         :disabled="disabled"

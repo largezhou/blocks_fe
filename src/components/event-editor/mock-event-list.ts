@@ -1,37 +1,64 @@
 import { EventData } from '@/components/event-editor/types'
 
 const mockEventList: EventData[] = [
-  // 点击 按钮1 将 按钮2 设置为 禁用
   {
-    trigger: {
-      id: 'BButton-fv83mzvt',
-      event: 'click',
+    'trigger': {
+      'id': 'BButton-fv83mzvt',
+      'event': 'click',
     },
-    action: {
-      id: 'BButton-ieb6r3n2',
-      action: 'changeDisabledToTrue',
+    'action': {
+      'id': 'BButton-ieb6r3n2',
+      'action': 'changeDisabledToTrue',
     },
   },
-  // 点击 按钮1 将 开始 timeout 倒计时
   {
-    trigger: {
-      id: 'BButton-fv83mzvt',
-      event: 'click',
+    'trigger': {
+      'id': 'BButton-fv83mzvt',
+      'event': 'click',
     },
-    action: {
-      id: 'BTimeout-p50w64tc',
-      action: 'startTimeout',
+    'action': {
+      'id': 'BTimeout-p50w64tc',
+      'action': 'startTimeout',
     },
   },
-  // timeout 倒计时结束，将 按钮2 设置为 可用
   {
-    trigger: {
-      id: 'BTimeout-p50w64tc',
-      event: 'timeout',
+    'trigger': {
+      'id': 'BTimeout-p50w64tc',
+      'event': 'timeout',
     },
-    action: {
-      id: 'BButton-ieb6r3n2',
-      action: 'changeDisabledToFalse',
+    'action': {
+      'id': 'BButton-ieb6r3n2',
+      'action': 'changeDisabledToFalse',
+    },
+  },
+  {
+    'trigger': {
+      'id': 'BButton-nz6dteey',
+      'event': 'click',
+    },
+    'action': {
+      'id': 'BInput-4ilyo7eq',
+      'action': 'clear',
+    },
+  },
+  {
+    'trigger': {
+      'id': 'BInput-4ilyo7eq',
+      'event': 'change',
+    },
+    'action': {
+      'id': 'BButton-9yjy7o5m',
+      'action': 'changeHiddenToTrue',
+    },
+  },
+  {
+    'trigger': {
+      'id': 'BInterval-knaw34ub',
+      'event': 'interval',
+    },
+    'action': {
+      'id': 'BButton-9yjy7o5m',
+      'action': 'changeHiddenToFalse',
     },
   },
 ]

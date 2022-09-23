@@ -27,6 +27,23 @@ const onAddComponent = (data: ComponentData) => {
 const onRemoveComponent = (index: number) => {
   componentDataList.splice(index, 1)
 }
+
+const onRemoveEvent = (index: number) => {
+  pageData.events.splice(index, 1)
+}
+
+const onAddEvent = (index: number) => {
+  pageData.events.splice(index + 1, 0, {
+    trigger: {
+      id: '',
+      event: '',
+    },
+    action: {
+      id: '',
+      action: '',
+    },
+  })
+}
 </script>
 
 <template>
@@ -39,6 +56,8 @@ const onRemoveComponent = (index: number) => {
   <BEventEditor
     v-show="currentMode === EDITOR_MODE_EVENT"
     :page-data="pageData"
+    @remove="onRemoveEvent"
+    @add="onAddEvent"
   />
   <BTester
     v-if="currentMode === EDITOR_MODE_TESTER"

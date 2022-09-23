@@ -15,8 +15,5 @@ export default defineComponent({
 </script>
 
 <template>
-  <ATooltip>
-    <template #title>组件不存在</template>
-    <BSvgIcon name="not-exists"/>
-  </ATooltip>
+  <BSvgIcon name="not-exists"/>
 </template>

@@ -18,6 +18,8 @@ import _set from 'lodash/set'
 import { PageData } from '@/components/editor/types'
 import BLayout from '@/components/layout/BLayout.vue'
 import BChangeMode from '@/components/editor/BChangeMode.vue'
+import { EventData, SettingAction } from '@/components/event-editor/types'
+import { commonActions } from '@/components/event-editor'
 
 const props = defineProps<{
   pageData: PageData
@@ -25,11 +27,11 @@ const props = defineProps<{
 
 const compRefMap = ref<KeyValue<ComponentPublicInstance | undefined>>({})
 // 页面组件信息，避免修改传进来的数据，简单深拷贝一下
-const components = JSON.parse(JSON.stringify(props.pageData.components || []))
+const components: ComponentData[] = JSON.parse(JSON.stringify(props.pageData.components || []))
 // 所有组件的 ID 到 组件配置的映射
 const componentSettingMap = ref<KeyValue<KeyValue>>({})
 // 事件配置
-const events = JSON.parse(JSON.stringify(props.pageData.events || []))
+const events: EventData[] = JSON.parse(JSON.stringify(props.pageData.events || []))
 /**
  * 组件 ID 到组件事件的回调函数数组
  *
@@ -105,24 +107,29 @@ const initEventFlow = () => {
       console.warn(`动作组件, ID: ${trigger.id}, componentName: ${actionRef.$.type.name}, 找不到组件定义`)
       continue
     }
-    const actionSetting = actionCD.eventSetting?.action?.[action.action]
+    let actionSetting = actionCD.eventSetting?.action?.[action.action]
+    if (actionSetting === undefined && actionCD.settings?.controlHidden !== undefined) {
+      actionSetting = commonActions.controlHidden[action.action]
+    }
+
     if (actionSetting === undefined) {
       console.warn(`动作组件, ID: ${trigger.id}, componentName: ${actionRef.$.type.name}, 找不到组件动作: ${action.action}`)
       continue
     }
 
     let callback: Function
-    if (actionSetting.method) {
-      const c = actionRef.$.exposed?.[actionSetting.method as string]
+    const as = actionSetting as SettingAction
+    if (as.method) {
+      const c = actionRef.$.exposed?.[as.method as string]
       if (typeof c === 'function') {
         callback = () => c()
       } else {
-        console.warn(`动作组件, ID: ${trigger.id}, componentName: ${actionRef.$.type.name}, 找不到组件方法: ${actionSetting.method}`)
+        console.warn(`动作组件, ID: ${trigger.id}, componentName: ${actionRef.$.type.name}, 找不到组件方法: ${as.method}`)
         continue
       }
     } else {
       callback = () => {
-        componentSettingMap.value[action.id][actionSetting.prop as string] = actionSetting.value
+        componentSettingMap.value[action.id][as.prop as string] = as.value
       }
     }
 
@@ -164,6 +171,7 @@ onMounted(() => {
           >
             <component
               :is="component.componentName"
+              v-show="!componentSettingMap[component.id].controlHidden"
               :ref="(el: ComponentPublicInstance | null) => updateCompRefList(el, component)"
               v-bind="componentSettingMap[component.id]"
               v-on="vOnMap[component.id] || {}"

@@ -2,12 +2,13 @@ import { ComponentData } from '@/components/page-editor/types'
 
 const mockComponentDataList: ComponentData[] = [
   {
-    'showName': '重置',
+    'showName': '按钮-重置',
     'componentName': 'BButton',
     'id': 'BButton-nz6dteey',
     'setting': {
       'text': '重置',
       'type': 'default',
+      'controlHidden': false,
       'danger': false,
       'disabled': false,
     },
@@ -17,12 +18,13 @@ const mockComponentDataList: ComponentData[] = [
     'top': 92,
   },
   {
-    'showName': '查询',
+    'showName': '按钮-查询',
     'componentName': 'BButton',
     'id': 'BButton-9yjy7o5m',
     'setting': {
       'text': '查询',
       'type': 'primary',
+      'controlHidden': false,
       'danger': false,
       'disabled': false,
     },
@@ -32,7 +34,7 @@ const mockComponentDataList: ComponentData[] = [
     'top': 92,
   },
   {
-    'showName': '查询 UIN',
+    'showName': '输入-查询 UIN',
     'componentName': 'BInput',
     'id': 'BInput-4ilyo7eq',
     'setting': {
@@ -41,6 +43,7 @@ const mockComponentDataList: ComponentData[] = [
       'value': null,
       'extra': '',
       'placeholder': '请输入...',
+      'controlHidden': false,
       'allowClear': true,
       'disabled': false,
     },
@@ -60,12 +63,13 @@ const mockComponentDataList: ComponentData[] = [
     'top': 0,
   },
   {
-    'showName': '测试被修改',
+    'showName': '按钮-测试被修改',
     'componentName': 'BButton',
     'id': 'BButton-ieb6r3n2',
     'setting': {
       'text': '测试被修改',
       'type': 'primary',
+      'controlHidden': false,
       'danger': false,
       'disabled': false,
     },
@@ -75,12 +79,13 @@ const mockComponentDataList: ComponentData[] = [
     'top': 276,
   },
   {
-    'showName': '设置为禁用',
+    'showName': '按钮-设置为禁用',
     'componentName': 'BButton',
     'id': 'BButton-fv83mzvt',
     'setting': {
       'text': '设置为禁用',
       'type': 'primary',
+      'controlHidden': false,
       'danger': false,
       'disabled': false,
     },
@@ -90,7 +95,7 @@ const mockComponentDataList: ComponentData[] = [
     'top': 207,
   },
   {
-    'showName': '重置按钮',
+    'showName': '延迟-重置按钮',
     'componentName': 'BTimeout',
     'id': 'BTimeout-p50w64tc',
     'setting': {
@@ -98,8 +103,20 @@ const mockComponentDataList: ComponentData[] = [
     },
     'width': 0,
     'height': 0,
-    'left': 228,
-    'top': 322,
+    'left': 0,
+    'top': 368,
+  },
+  {
+    'showName': '定时-执行',
+    'componentName': 'BInterval',
+    'id': 'BInterval-knaw34ub',
+    'setting': {
+      'time': 2000,
+    },
+    'width': 0,
+    'height': 0,
+    'left': 76,
+    'top': 368,
   },
 ]
 

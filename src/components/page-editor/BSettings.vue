@@ -10,7 +10,7 @@ import { ComponentPropsSetting } from '@/components/b-components/types'
 import { KeyValue } from '@/types/common'
 
 const props = defineProps<{
-  componentData: ComponentData | null
+  componentData?: ComponentData
 }>()
 const emits = defineEmits<{
   (e: 'update:settingValues', setting: KeyValue): void
@@ -43,7 +43,7 @@ const getValueName = (setting: ComponentPropsSetting) => {
 const getUpdateValueEventName = (setting: ComponentPropsSetting) => {
   return `update:${getValueName(setting)}`
 }
-const onUpdateValue = (propName: string, val: unknown) => {
+const onUpdateValue = (propName: string | number, val: any) => {
   formData[propName] = val
 }
 const vBind = (setting: ComponentPropsSetting) => {
@@ -69,7 +69,7 @@ const vBind = (setting: ComponentPropsSetting) => {
           :is="setting.componentName"
           v-bind="vBind(setting)"
           :[getValueName(setting)]="formData[propsName]"
-          @[getUpdateValueEventName(setting)]="(val: unknown) => onUpdateValue(propsName, val)"
+          @[getUpdateValueEventName(setting)]="(val: any) => onUpdateValue(propsName, val)"
         />
       </AFormItem>
     </AForm>

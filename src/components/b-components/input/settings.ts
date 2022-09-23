@@ -1,6 +1,7 @@
 import { ComponentPropsSettings } from '@/components/b-components/types'
+import { EventSetting } from '@/components/event-editor/types'
 
-const settings: ComponentPropsSettings = {
+export const settings: ComponentPropsSettings = {
   label: {
     label: '标签文本',
     componentName: 'AInput',
@@ -26,6 +27,12 @@ const settings: ComponentPropsSettings = {
     componentName: 'AInput',
     value: '请输入...',
   },
+  controlHidden: {
+    label: '隐藏',
+    componentName: 'ACheckbox',
+    valueName: 'checked',
+    value: false,
+  },
   allowClear: {
     label: '是否可清除',
     componentName: 'ACheckbox',
@@ -40,4 +47,17 @@ const settings: ComponentPropsSettings = {
   },
 }
 
-export default settings
+export const eventSetting: EventSetting = {
+  action: {
+    clear: {
+      showName: '清空值',
+      method: 'clear',
+    },
+  },
+  trigger: {
+    change: {
+      showName: '值变化',
+      event: 'change',
+    },
+  },
+}

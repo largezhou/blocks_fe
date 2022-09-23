@@ -1,6 +1,7 @@
 import { ComponentPropsSettings } from '@/components/b-components/types'
+import { EventSetting } from '@/components/event-editor/types'
 
-const settings: ComponentPropsSettings = {
+export const settings: ComponentPropsSettings = {
   text: {
     label: '文本',
     componentName: 'AInput',
@@ -27,6 +28,12 @@ const settings: ComponentPropsSettings = {
       ],
     },
   },
+  controlHidden: {
+    label: '隐藏',
+    componentName: 'ACheckbox',
+    valueName: 'checked',
+    value: false,
+  },
   danger: {
     label: '设置为危险按钮',
     componentName: 'ACheckbox',
@@ -41,4 +48,24 @@ const settings: ComponentPropsSettings = {
   },
 }
 
-export default settings
+export const eventSetting: EventSetting = {
+  action: {
+    changeDisabledToTrue: {
+      showName: '设置为禁用',
+      prop: 'disabled',
+      value: true,
+    },
+    changeDisabledToFalse: {
+      showName: '设置为可用',
+      prop: 'disabled',
+      value: false,
+    },
+  },
+  trigger: {
+    click: {
+      showName: '点击',
+      event: 'click',
+    },
+  },
+}
+

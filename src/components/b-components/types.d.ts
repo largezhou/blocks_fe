@@ -21,10 +21,24 @@ export interface ComponentPropsSetting {
    */
   value: any,
   /**
-   * 组件的其他配置项，比如 ASelect 的 Option 之类的
+   * 组件的其他配置项，比如 ASelect 的 options 之类的
    * @see https://www.antdv.com/components/overview-cn
    */
   setting?: KeyValue,
 }
 
-export type ComponentPropsSettings = KeyValue<ComponentPropsSetting>
+export type ComponentPropsSettings = {
+  /**
+   * 组件是否隐藏，这个统一控制，不需要在组件中处理 v-show
+   * 取这个名字，是避免和组件中的 hidden 同名
+   */
+  controlHidden?: {
+    label: '隐藏',
+    componentName: 'ACheckbox',
+    valueName: 'checked',
+    value: boolean,
+  }
+  [key: string]: ComponentPropsSetting
+}
+
+type A = keyof ComponentPropsSettings

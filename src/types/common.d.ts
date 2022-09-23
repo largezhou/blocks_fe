@@ -1,1 +1,1 @@
-export type KeyValue<T = unknown> = Record<string, T>
+export type KeyValue<T = any> = Record<string, T>

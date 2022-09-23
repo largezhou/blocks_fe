@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
-import settings from './settings'
+import { settings, eventSetting } from './settings'
 
 export default defineComponent({
   name: 'BButton',
@@ -11,30 +11,7 @@ export default defineComponent({
   category: '通用',
   showNameAs: 'text',
   settings,
-  eventSetting: {
-    action: {
-      changeText: {
-        showName: '文本',
-        prop: 'text',
-      },
-      changeDisabledToTrue: {
-        showName: '设置为禁用',
-        prop: 'disabled',
-        value: true,
-      },
-      changeDisabledToFalse: {
-        showName: '设置为可用',
-        prop: 'disabled',
-        value: false,
-      },
-    },
-    trigger: {
-      click: {
-        showName: '点击',
-        event: 'click',
-      },
-    },
-  },
+  eventSetting,
 })
 </script>
 
