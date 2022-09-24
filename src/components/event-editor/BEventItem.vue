@@ -19,6 +19,7 @@ import { commonActions } from '@/components/event-editor'
 const props = defineProps<{
   pageData: PageData
   event: EventData
+  componentSelectOptions: { label: string, value: any }[]
 }>()
 
 defineEmits<{
@@ -27,10 +28,6 @@ defineEmits<{
 }>()
 
 const data = reactive<EventData>(props.event)
-
-const componentSelectOptions = computed(() => {
-  return props.pageData.components.map((data) => ({ label: data.showName, value: data.id }))
-})
 
 const filterOption = (input: string, option: any) => {
   return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0

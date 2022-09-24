@@ -21,7 +21,7 @@ import {
   MIN_WIDTH_UNIT, MIN_HEIGHT_UNIT,
 } from '@/libs/consts'
 import BComponent from '@/components/page-editor/BComponent.vue'
-import { definitionToData, getComponentById, getComponentIndexById } from '@/libs/utils'
+import { definitionToData, getComponentById } from '@/libs/utils'
 import BSettings from '@/components/page-editor/BSettings.vue'
 import { KeyValue } from '@/types/common'
 import BLayout from '@/components/layout/BLayout.vue'
@@ -38,7 +38,7 @@ const emits = defineEmits<{
 }>()
 
 // 正在拖动的组件
-const draggingComponent = ref<ComponentData | null>(null)
+const draggingComponent = ref<ComponentData>()
 // 鼠标移动时的类型，move-拖动组件，new-新增组件，resize-缩放组件
 let curType = ref<MovingType>(null)
 // 鼠标按下时，鼠标的位置和组件的大小
@@ -58,11 +58,7 @@ const isMoving = ref(false)
 // 当前选中组件 ID
 const selectedId = ref<string>()
 // 当前选中的组件
-const selectedComponent = computed(() => {
-  return selectedId.value
-    ? getComponentById(props.componentDataList, selectedId.value)
-    : undefined
-})
+const selectedComponent = computed(() => getComponentById(props.componentDataList, selectedId.value as string))
 
 const onStartNew = (e: MouseEvent, component: ComponentData) => {
   startMove(e, component, MOVE_TYPE_NEW)
@@ -94,13 +90,13 @@ const startMove = (e: MouseEvent, component: ComponentData, type: MovingType) =>
 // 停止鼠标拖动
 const stop = () => {
   isMoving.value = false
-  draggingComponent.value = null
+  draggingComponent.value = undefined
   curType.value = null
 }
 useEventListener(document, 'mousemove', (_e: Event) => {
   const dc = draggingComponent.value
 
-  if (dc === null) {
+  if (!dc) {
     return
   }
 
@@ -135,7 +131,7 @@ useEventListener(document, 'mouseup', (_e: Event) => {
   const c = draggingComponent.value
   const ps = placeholderSpace.value
 
-  if (!isMoving.value || c === null || ps.left < 0 || ps.top < 0) {
+  if (!isMoving.value || !c || ps.left < 0 || ps.top < 0) {
     stop()
     return
   }
@@ -163,7 +159,7 @@ const placeholderSpace = computed<Space>(() => {
     width: 0,
   }
 
-  if (!isMoving.value || dc === null) {
+  if (!isMoving.value || !dc) {
     return space
   }
 
@@ -211,10 +207,9 @@ const onStartMove = (e: MouseEvent, component: ComponentData) => {
   selectedId.value = component.id
   startMove(e, component, MOVE_TYPE_MOVE)
 }
-const onRemove = (id: string) => {
-    const i = getComponentIndexById(props.componentDataList, id)
-    emits('remove', i)
-    selectedId.value = undefined
+const onRemove = (i: number) => {
+  emits('remove', i)
+  selectedId.value = undefined
 }
 
 const onStartResize = (e: MouseEvent, component: ComponentData) => {
@@ -274,16 +269,16 @@ const onSave = () => {
         <div class="content-2">
           <div class="placeholder" :style="placeholderSpaceStyles"/>
           <BComponent
-            v-if="curType === MOVE_TYPE_NEW && isMoving && draggingComponent !== null"
+            v-if="curType === MOVE_TYPE_NEW && isMoving && draggingComponent"
             :data="draggingComponent"
           />
-          <template v-for="componentData in componentDataList" :key="componentData.id">
+          <template v-for="(componentData, index) in componentDataList" :key="componentData.id">
             <BComponent
               :data="componentData"
               :selected-id="selectedId"
               @start-move="onStartMove"
               @resize="onStartResize"
-              @remove="onRemove"
+              @remove="() => onRemove(index)"
             />
           </template>
         </div>

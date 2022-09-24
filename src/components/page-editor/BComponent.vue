@@ -22,7 +22,7 @@ const props = defineProps<{
 
 const emits = defineEmits<{
   (e: 'resize', event: MouseEvent, data: ComponentData): void
-  (e: 'remove', id: string): void
+  (e: 'remove', data: ComponentData): void
   (e: 'startMove', event: MouseEvent, data: ComponentData): void
 }>()
 
@@ -79,7 +79,7 @@ const onStartMove = (e: MouseEvent) => {
     />
     <CloseCircleFilled
       class="remove"
-      @click="emits('remove', data.id)"
+      @click="emits('remove', data)"
     />
   </div>
 </template>

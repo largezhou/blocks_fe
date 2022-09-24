@@ -13,6 +13,7 @@ import BChangeMode from '@/components/editor/BChangeMode.vue'
 import BSvgIcon from '@/components/svg-icon/BSvgIcon.vue'
 import { componentMap } from '@/components/b-components'
 import BEventItem from '@/components/event-editor/BEventItem.vue'
+import { computed } from 'vue'
 
 const props = defineProps<{
   pageData: PageData
@@ -22,6 +23,10 @@ defineEmits<{
   (e: 'remove', index: number): void
   (e: 'add', index: number): void
 }>()
+
+const componentSelectOptions = computed(() => {
+  return props.pageData.components.map((data) => ({ label: data.showName, value: data.id }))
+})
 
 const getKey = (index: number) => {
   return Symbol(index)
@@ -68,6 +73,7 @@ const onSave = () => {
               :key="getKey(index)"
               :event="event"
               :page-data="pageData"
+              :component-select-options="componentSelectOptions"
               @remove="$emit('remove', index)"
               @add="$emit('add', index)"
             />
