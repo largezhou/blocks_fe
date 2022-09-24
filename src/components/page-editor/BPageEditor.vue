@@ -7,7 +7,7 @@ export default defineComponent({
 </script>
 
 <script setup lang="ts">
-import { groupComponents, componentMap } from '@/components/b-components'
+import { groupComponents, componentMap, componentHasUi } from '@/components/b-components'
 import BSvgIcon from '@/components/svg-icon/BSvgIcon.vue'
 import { ref, computed } from 'vue'
 import { useEventListener } from '@/hooks/common'
@@ -70,6 +70,10 @@ const onStartNew = (e: MouseEvent, component: ComponentData) => {
 // 开始拖拽组建，移动，新增或缩放
 const startMove = (e: MouseEvent, component: ComponentData, type: MovingType) => {
   if (e.buttons !== 1) {
+    return
+  }
+
+  if (type === MOVE_TYPE_RESIZE && !componentHasUi(component)) {
     return
   }
 
@@ -136,11 +140,12 @@ useEventListener(document, 'mouseup', (_e: Event) => {
     return
   }
 
+  const hasUI = componentHasUi(c)
   // 使用 占位元素的 大小和位置
   c.left = ps.left
   c.top = ps.top
-  c.width = ps.width
-  c.height = ps.height
+  c.width = hasUI ? ps.width : 0
+  c.height = hasUI ? ps.height : 0
 
   if (curType.value === MOVE_TYPE_NEW) {
     emits('add', { ...c })
@@ -170,7 +175,15 @@ const placeholderSpace = computed<Space>(() => {
       gridValue = GRID_HEIGHT
     }
 
-    space[key] = Math.round(dc[key] / gridValue) * gridValue
+    let val
+    if (key === 'width' || key === 'height') {
+      // 无 UI 组件的尺寸为 0，占位元素，显示为 2 个单位的长宽
+      val = dc[key] || (MIN_HEIGHT_UNIT * gridValue)
+    } else {
+      val = dc[key]
+    }
+
+    space[key] = Math.round(val / gridValue) * gridValue
   }
 
   if (curType.value === MOVE_TYPE_NEW && (space.left < 0 || space.top < 0)) {
@@ -198,14 +211,11 @@ const onStartMove = (e: MouseEvent, component: ComponentData) => {
   selectedId.value = component.id
   startMove(e, component, MOVE_TYPE_MOVE)
 }
-useEventListener(document, 'keydown', (_e: Event) => {
-  const e = _e as KeyboardEvent
-  if (selectedId.value && e.key === 'Delete') {
-    const i = getComponentIndexById(props.componentDataList, selectedId.value)
+const onRemove = (id: string) => {
+    const i = getComponentIndexById(props.componentDataList, id)
     emits('remove', i)
     selectedId.value = undefined
-  }
-})
+}
 
 const onStartResize = (e: MouseEvent, component: ComponentData) => {
   startMove(e, component, MOVE_TYPE_RESIZE)
@@ -271,8 +281,9 @@ const onSave = () => {
             <BComponent
               :data="componentData"
               :selected-id="selectedId"
-              @mousedown.stop="onStartMove($event, componentData)"
+              @start-move="onStartMove"
               @resize="onStartResize"
+              @remove="onRemove"
             />
           </template>
         </div>

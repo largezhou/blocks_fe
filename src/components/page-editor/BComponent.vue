@@ -13,6 +13,7 @@ import { componentHasUi, componentMap } from '@/components/b-components'
 import { GRID_WIDTH, GRID_HEIGHT, MIN_HEIGHT_UNIT, MIN_WIDTH_UNIT } from '@/libs/consts'
 import { computed } from 'vue'
 import BComponentNotExists from '@/components/b-components/component-not-exists/BComponentNotExists.vue'
+import { CloseCircleFilled } from '@ant-design/icons-vue'
 
 const props = defineProps<{
   data: ComponentData
@@ -21,6 +22,8 @@ const props = defineProps<{
 
 const emits = defineEmits<{
   (e: 'resize', event: MouseEvent, data: ComponentData): void
+  (e: 'remove', id: string): void
+  (e: 'startMove', event: MouseEvent, data: ComponentData): void
 }>()
 
 const cd = componentMap[props.data.componentName]
@@ -40,16 +43,28 @@ const spaceStyles = computed(() => {
   }
 })
 const isSelected = computed(() => props.selectedId === props.data.id)
+const onStartMove = (e: MouseEvent) => {
+  const shouldIgnore = e.composedPath().some((el) => {
+    return (el as HTMLElement).classList?.contains('remove')
+  })
+
+  if (shouldIgnore) {
+    return
+  }
+
+  emits('startMove', e, props.data)
+}
 </script>
 
 <template>
   <div
-    class="b-component"
+    class="component"
     :class="{
       selected: isSelected,
       hidden: data?.setting?.controlHidden,
     }"
     :style="spaceStyles"
+    @mousedown.stop="onStartMove"
   >
     <component
       :is="componentName"
@@ -57,7 +72,15 @@ const isSelected = computed(() => props.selectedId === props.data.id)
       v-bind="data?.setting"
     />
     <BSvgIcon v-else :name="`component-${cd?.icon || '_default'}`"/>
-    <div class="b-resizer" @mousedown.stop="emits('resize', $event, data)"/>
+    <div
+      v-if="hasUI"
+      class="resizer"
+      @mousedown.stop="emits('resize', $event, data)"
+    />
+    <CloseCircleFilled
+      class="remove"
+      @click="emits('remove', data.id)"
+    />
   </div>
 </template>
 
@@ -66,18 +89,23 @@ const isSelected = computed(() => props.selectedId === props.data.id)
 @selected-border: 1px;
 @selected-padding: @component-padding - @selected-border;
 
-.b-component {
+.component {
   user-select: none;
-  box-sizing: border-box;
   position: absolute;
   padding: @component-padding;
   border-radius: 2px;
+
+  &:hover {
+    .remove {
+      display: block;
+    }
+  }
 
   &.selected {
     border: @selected-border #bae7ff solid;
     padding: @selected-padding;
 
-    .b-resizer {
+    .resizer {
       display: block;
     }
   }
@@ -86,7 +114,7 @@ const isSelected = computed(() => props.selectedId === props.data.id)
     opacity: 0.3;
   }
 
-  .b-resizer {
+  .resizer {
     display: none;
     width: 12px;
     height: 12px;
@@ -103,6 +131,20 @@ const isSelected = computed(() => props.selectedId === props.data.id)
   .b-svg-icon {
     height: 100%;
     width: 100%;
+  }
+
+  .remove {
+    cursor: pointer;
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: #bfbfbf;
+    font-size: 14px;
+
+    &:hover {
+      color: #8c8c8c;
+    }
   }
 }
 </style>
