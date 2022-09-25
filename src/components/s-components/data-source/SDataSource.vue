@@ -7,9 +7,9 @@ export default defineComponent({
 </script>
 
 <script setup lang="ts">
-import { inject, computed, watch } from 'vue'
-import { SelectOptions } from '@/types/common'
-import { getComponentDefById, injectComponentDataList, selectFilterOption } from '@/libs/utils'
+import { inject, computed, watch, Ref } from 'vue'
+import { SelectOptions, VueReadonly } from '@/types/common'
+import { getComponentDefById, selectFilterOption } from '@/libs/utils'
 import { ComponentData } from '@/components/page-editor/types'
 import _map from 'lodash/map'
 import { SettingValue } from '@/components/event-editor/types'
@@ -26,8 +26,8 @@ const emits = defineEmits<{
   (e: 'update:value', val: DataSource): void
 }>()
 
-const componentSelectOptions = inject('componentSelectOptions') as SelectOptions<string>
-const componentDataList = injectComponentDataList()
+const componentSelectOptions = inject('componentSelectOptions') as Ref<SelectOptions<string>>
+const componentDataList = inject('componentDataList') as VueReadonly<ComponentData[]>
 const dataSelectOptions = computed<SelectOptions>(() => {
   if (!props.value?.id) {
     return []

@@ -7,7 +7,7 @@ export default defineComponent({
 </script>
 
 <script setup lang="ts">
-import { ComponentPublicInstance, onMounted, provide, reactive, ref } from 'vue'
+import { ComponentPublicInstance, onMounted, provide, reactive, Ref, ref } from 'vue'
 import { ComponentData } from '@/components/page-editor/types'
 import {
   MIN_WIDTH_UNIT, MIN_HEIGHT_UNIT, GRID_WIDTH, GRID_HEIGHT,
@@ -64,7 +64,7 @@ const callbackMap: KeyValue<KeyValue<Function[] | undefined> | undefined> = {}
  */
 const vOnMap = reactive<KeyValue<KeyValue<Function> | undefined>>({})
 
-provide('compRefMap', compRefMap)
+provide<Ref<KeyValue<ComponentPublicInstance | undefined>>>('compRefMap', compRefMap)
 
 const updateCompRefList = (el: ComponentPublicInstance | null, component: ComponentData) => {
   if (el === null) {

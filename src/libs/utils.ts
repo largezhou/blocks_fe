@@ -3,7 +3,6 @@ import { ComponentData } from '@/components/page-editor/types'
 import { GRID_HEIGHT, GRID_WIDTH } from '@/libs/consts'
 import { SelectOptions } from '@/types/common'
 import { componentMap } from '@/components/b-components'
-import { DeepReadonly, inject, UnwrapNestedRefs } from 'vue'
 
 export const componentId = (name: string) => {
   return `${name}-${Math.random().toString(36).slice(-8)}`
@@ -59,8 +58,4 @@ export const safeJsonParse = (text?: string | null, defaultVal?: any) => {
 
 export const selectFilterOption = (input: string, option: any) => {
   return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
-}
-
-export const injectComponentDataList = () => {
-  return inject('componentDataList') as DeepReadonly<UnwrapNestedRefs<ComponentData[]>>
 }

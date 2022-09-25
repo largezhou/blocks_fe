@@ -8,17 +8,17 @@ export default defineComponent({
 
 <script setup lang="ts">
 import { PageData } from '@/components/editor/types'
-import { computed, reactive, watch } from 'vue'
+import { computed, inject, reactive, watch, Ref } from 'vue'
 import { EventData } from '@/components/event-editor/types'
 import { selectFilterOption, getComponentDefById } from '@/libs/utils'
 import _map from 'lodash/map'
 import { PlusOutlined, MinusOutlined } from '@ant-design/icons-vue'
 import { commonActions } from '@/components/event-editor'
+import { SelectOptions } from '@/types/common'
 
 const props = defineProps<{
   pageData: PageData
   event: EventData
-  componentSelectOptions: { label: string, value: any }[]
 }>()
 
 defineEmits<{
@@ -27,6 +27,8 @@ defineEmits<{
 }>()
 
 const data = reactive<EventData>(props.event)
+
+const componentSelectOptions = inject('componentSelectOptions') as Ref<SelectOptions<string>>
 
 const componentTriggerOptions = computed(() => {
   const setting = getComponentDefById(props.pageData.components, data.trigger.id)?.eventSetting?.trigger || {}
