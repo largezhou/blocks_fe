@@ -6,9 +6,10 @@ import { Defaults } from '@/components/s-components/types'
 import { KeyValue } from '@/types/common'
 
 const defaults: KeyValue<Defaults | undefined> = {
-  ASelect: {},
-  ACheckbox: {},
   AInput: {
+    allowClear: true,
+  },
+  ATextarea: {
     allowClear: true,
   },
 }

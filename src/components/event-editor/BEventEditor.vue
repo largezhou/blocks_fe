@@ -13,7 +13,8 @@ import BChangeMode from '@/components/editor/BChangeMode.vue'
 import BSvgIcon from '@/components/svg-icon/BSvgIcon.vue'
 import { componentMap } from '@/components/b-components'
 import BEventItem from '@/components/event-editor/BEventItem.vue'
-import { computed } from 'vue'
+import { inject } from 'vue'
+import { SelectOptions } from '@/types/common'
 
 const props = defineProps<{
   pageData: PageData
@@ -24,9 +25,7 @@ defineEmits<{
   (e: 'add', index: number): void
 }>()
 
-const componentSelectOptions = computed(() => {
-  return props.pageData.components.map((data) => ({ label: data.showName, value: data.id }))
-})
+const componentSelectOptions = inject<SelectOptions<string>>('componentSelectOptions') as SelectOptions<string>
 
 const getKey = (index: number) => {
   return Symbol(index)

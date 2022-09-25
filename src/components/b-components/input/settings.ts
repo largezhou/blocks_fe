@@ -60,4 +60,9 @@ export const eventSetting: EventSetting = {
       event: 'change',
     },
   },
+  value: {
+    inputValue: {
+      showName: '值',
+    },
+  },
 }

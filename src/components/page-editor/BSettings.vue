@@ -8,6 +8,7 @@ import { computed, watch, reactive } from 'vue'
 import { componentMap } from '@/components/b-components'
 import { ComponentPropsSetting } from '@/components/b-components/types'
 import { KeyValue } from '@/types/common'
+import _has from 'lodash/has'
 
 const props = defineProps<{
   componentData?: ComponentData
@@ -32,7 +33,9 @@ watch(formData, () => {
 watch(() => props.componentData?.id, () => {
   _keys(formData).forEach((key: string) => delete formData[key])
   _forEach(settings.value, (setting, propsName) => {
-    formData[propsName] = props.componentData?.setting[propsName] || setting.value
+    formData[propsName] = _has(props.componentData, `setting.${propsName}`)
+      ? props.componentData?.setting[propsName]
+      : setting.value
   })
 }, {
   immediate: true,
@@ -64,6 +67,7 @@ const vBind = (setting: ComponentPropsSetting) => {
         v-for="(setting, propsName) in settings"
         :key="propsName"
         :label="setting.label"
+        :extra="setting.extra"
       >
         <component
           :is="setting.componentName"

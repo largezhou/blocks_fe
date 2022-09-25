@@ -8,10 +8,9 @@ export default defineComponent({
 
 <script setup lang="ts">
 import { PageData } from '@/components/editor/types'
-import { computed, reactive } from 'vue'
+import { computed, reactive, watch } from 'vue'
 import { EventData } from '@/components/event-editor/types'
-import { getComponentById } from '@/libs/utils'
-import { componentMap } from '@/components/b-components'
+import { selectFilterOption, getComponentDefById } from '@/libs/utils'
 import _map from 'lodash/map'
 import { PlusOutlined, MinusOutlined } from '@ant-design/icons-vue'
 import { commonActions } from '@/components/event-editor'
@@ -29,28 +28,13 @@ defineEmits<{
 
 const data = reactive<EventData>(props.event)
 
-const filterOption = (input: string, option: any) => {
-  return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
-}
-
-const getComponentDefByComponentId = (id?: string) => {
-  if (!id) {
-    return null
-  }
-  const dc = getComponentById(props.pageData.components, id)
-  if (!dc) {
-    return null
-  }
-  return componentMap[dc.componentName]
-}
-
 const componentTriggerOptions = computed(() => {
-  const setting = getComponentDefByComponentId(data.trigger.id)?.eventSetting?.trigger || {}
+  const setting = getComponentDefById(props.pageData.components, data.trigger.id)?.eventSetting?.trigger || {}
   return _map(setting, (s, key) => ({ label: s.showName, value: key }))
 })
 
 const componentActionOptions = computed(() => {
-  const cd = getComponentDefByComponentId(data.action.id)
+  const cd = getComponentDefById(props.pageData.components, data.action.id)
   if (!cd) {
     return []
   }
@@ -63,6 +47,14 @@ const componentActionOptions = computed(() => {
 
   return options
 })
+
+watch(() => data.trigger.id, () => {
+  data.trigger.event = ''
+})
+
+watch(() => data.action.id, () => {
+  data.action.action = ''
+})
 </script>
 
 <template>
@@ -72,7 +64,7 @@ const componentActionOptions = computed(() => {
         <ASelect
           v-model:value="data.trigger.id"
           show-search
-          :filter-option="filterOption"
+          :filter-option="selectFilterOption"
           :options="componentSelectOptions"
         />
       </AFormItem>
@@ -80,7 +72,7 @@ const componentActionOptions = computed(() => {
         <ASelect
           v-model:value="data.trigger.event"
           show-search
-          :filter-option="filterOption"
+          :filter-option="selectFilterOption"
           :options="componentTriggerOptions"
         />
       </AFormItem>
@@ -88,7 +80,7 @@ const componentActionOptions = computed(() => {
         <ASelect
           v-model:value="data.action.id"
           show-search
-          :filter-option="filterOption"
+          :filter-option="selectFilterOption"
           :options="componentSelectOptions"
         />
       </AFormItem>
@@ -96,7 +88,7 @@ const componentActionOptions = computed(() => {
         <ASelect
           v-model:value="data.action.action"
           show-search
-          :filter-option="filterOption"
+          :filter-option="selectFilterOption"
           :options="componentActionOptions"
         />
       </AFormItem>

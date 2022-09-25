@@ -25,6 +25,8 @@ export interface ComponentPropsSetting {
    * @see https://www.antdv.com/components/overview-cn
    */
   setting?: KeyValue,
+  // 说明文字
+  extra?: string,
 }
 
 export type ComponentPropsSettings = {

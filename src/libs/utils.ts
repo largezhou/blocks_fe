@@ -1,6 +1,9 @@
 import { ComponentDefinition } from '@/types/vue'
 import { ComponentData } from '@/components/page-editor/types'
 import { GRID_HEIGHT, GRID_WIDTH } from '@/libs/consts'
+import { SelectOptions } from '@/types/common'
+import { componentMap } from '@/components/b-components'
+import { DeepReadonly, inject, UnwrapNestedRefs } from 'vue'
 
 export const componentId = (name: string) => {
   return `${name}-${Math.random().toString(36).slice(-8)}`
@@ -13,7 +16,7 @@ export const componentId = (name: string) => {
  */
 export const definitionToData = (d: ComponentDefinition): ComponentData => {
   return {
-    showName: d.name,
+    showName: d.showName as string,
     componentName: d.name,
     id: componentId(d.name),
     setting: {},
@@ -30,4 +33,34 @@ export const getComponentIndexById = (list: ComponentData[], id: string): number
 
 export const getComponentById = (list: ComponentData[], id: string): ComponentData | undefined => {
   return list[getComponentIndexById(list, id)]
+}
+
+// 通过页面上组件的 ID，查找组件的定义
+export const getComponentDefById = (list: ComponentData[], id?: string): ComponentDefinition | undefined => {
+  if (!id) {
+    return undefined
+  }
+  return componentMap[getComponentById(list, id)?.componentName as string]
+}
+
+// 获取组件的下拉选择选项
+export const getComponentSelectOptions = (list: ComponentData[]): SelectOptions<string> => {
+  return list.map((data) => ({ label: data.showName, value: data.id }))
+}
+
+export const safeJsonParse = (text?: string | null, defaultVal?: any) => {
+  try {
+    return JSON.parse(text as string)
+  } catch (e) {
+    console.warn(e)
+    return defaultVal
+  }
+}
+
+export const selectFilterOption = (input: string, option: any) => {
+  return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0
+}
+
+export const injectComponentDataList = () => {
+  return inject('componentDataList') as DeepReadonly<UnwrapNestedRefs<ComponentData[]>>
 }

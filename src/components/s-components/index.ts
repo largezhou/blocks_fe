@@ -5,7 +5,11 @@
 import { App } from 'vue'
 import { ComponentDefinition } from '@/types/vue'
 
-const components: ComponentDefinition[] = []
+import SDataSource from '@/components/s-components/data-source/SDataSource.vue'
+
+const components: ComponentDefinition[] = [
+  SDataSource,
+]
 
 export default (app: App) => {
   components.forEach((x) => {

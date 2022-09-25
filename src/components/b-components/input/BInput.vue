@@ -49,11 +49,12 @@ watch(inputValue, () => {
 })
 
 const clear = () => {
-  inputValue.value = null
+  inputValue.value = undefined
 }
 
 defineExpose({
   clear,
+  inputValue,
 })
 </script>
 
