@@ -49,6 +49,9 @@ watch(inputValue, () => {
 })
 
 const clear = () => {
+  if (inputValue.value === undefined || inputValue.value === null || inputValue.value === '') {
+    return
+  }
   inputValue.value = undefined
 }
 

@@ -40,7 +40,7 @@ const mockComponentDataList: ComponentData[] = [
     setting: {
       label: 'UIN',
       name: 'uin',
-      value: null,
+      value: '',
       extra: '',
       placeholder: '请输入...',
       controlHidden: false,

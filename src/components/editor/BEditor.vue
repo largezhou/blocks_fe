@@ -11,7 +11,7 @@ import mockPageData from '@/components/editor/mock-page-data'
 import { provide, reactive, readonly, Ref, ref, watch } from 'vue'
 import BPageEditor from '@/components/page-editor/BPageEditor.vue'
 import { ComponentData } from '@/components/page-editor/types'
-import { EDITOR_MODE_PAGE, EDITOR_MODE_EVENT, EDITOR_MODE_TESTER } from '@/libs/consts'
+import { EditorMode } from '@/libs/consts'
 import BTester from '@/components/editor/BTester.vue'
 import BEventEditor from '@/components/event-editor/BEventEditor.vue'
 import useChangeMode from '@/components/editor/useChangeMode'
@@ -63,7 +63,7 @@ const onAddEvent = (index: number) => {
 <template>
   <KeepAlive>
     <BPageEditor
-      v-if="currentMode === EDITOR_MODE_PAGE"
+      v-if="currentMode === EditorMode.PAGE"
       :component-data-list="componentDataList"
       @add="onAddComponent"
       @remove="onRemoveComponent"
@@ -71,14 +71,14 @@ const onAddEvent = (index: number) => {
   </KeepAlive>
   <KeepAlive>
     <BEventEditor
-      v-if="currentMode === EDITOR_MODE_EVENT"
+      v-if="currentMode === EditorMode.EVENT"
       :page-data="pageData"
       @remove="onRemoveEvent"
       @add="onAddEvent"
     />
   </KeepAlive>
   <BTester
-    v-if="currentMode === EDITOR_MODE_TESTER"
+    v-if="currentMode === EditorMode.TESTER"
     :page-data="pageData"
   />
 </template>

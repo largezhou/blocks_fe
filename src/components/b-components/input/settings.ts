@@ -15,7 +15,7 @@ export const settings: ComponentPropsSettings = {
   value: {
     label: '默认值',
     componentName: 'AInput',
-    value: null,
+    value: undefined,
   },
   extra: {
     label: '下方提示信息',

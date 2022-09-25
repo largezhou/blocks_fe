@@ -7,9 +7,7 @@ export default defineComponent({
 </script>
 
 <script setup lang="ts">
-import {
-  EDITOR_MODE_PAGE, EDITOR_MODE_EVENT, EDITOR_MODE_TESTER,
-} from '@/libs/consts'
+import { EditorMode } from '@/libs/consts'
 import useChangeMode from '@/components/editor/useChangeMode'
 
 const { currentMode, changeMode } = useChangeMode()
@@ -21,8 +19,8 @@ const { currentMode, changeMode } = useChangeMode()
     button-style="solid"
     @update:value="changeMode"
   >
-    <ARadioButton :value="EDITOR_MODE_PAGE">页面</ARadioButton>
-    <ARadioButton :value="EDITOR_MODE_EVENT">事件</ARadioButton>
-    <ARadioButton :value="EDITOR_MODE_TESTER">预览</ARadioButton>
+    <ARadioButton :value="EditorMode.PAGE">页面</ARadioButton>
+    <ARadioButton :value="EditorMode.EVENT">事件</ARadioButton>
+    <ARadioButton :value="EditorMode.TESTER">预览</ARadioButton>
   </ARadioGroup>
 </template>

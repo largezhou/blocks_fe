@@ -11,14 +11,14 @@ import { groupComponents, componentMap, componentHasUi } from '@/components/b-co
 import BSvgIcon from '@/components/svg-icon/BSvgIcon.vue'
 import { ref, computed } from 'vue'
 import { useEventListener } from '@/hooks/common'
-import { Position, ComponentData, Space, MovingType } from '@/components/page-editor/types'
+import { Position, ComponentData, Space } from '@/components/page-editor/types'
 import {
   LAZY_DELTA,
   EDITOR_LEFT, EDITOR_TOP,
   DRAGGING_MOUSE_OFFSET,
   GRID_WIDTH, GRID_HEIGHT,
-  MOVE_TYPE_NEW, MOVE_TYPE_MOVE, MOVE_TYPE_RESIZE,
   MIN_WIDTH_UNIT, MIN_HEIGHT_UNIT,
+  MovingType,
 } from '@/libs/consts'
 import BComponent from '@/components/page-editor/BComponent.vue'
 import { definitionToData, getComponentById } from '@/libs/utils'
@@ -40,7 +40,7 @@ const emits = defineEmits<{
 // 正在拖动的组件
 const draggingComponent = ref<ComponentData>()
 // 鼠标移动时的类型，move-拖动组件，new-新增组件，resize-缩放组件
-let curType = ref<MovingType>(null)
+let curType = ref<MovingType>()
 // 鼠标按下时，鼠标的位置和组件的大小
 const startSpace: Space = {
   left: 0,
@@ -61,7 +61,7 @@ const selectedId = ref<string>()
 const selectedComponent = computed(() => getComponentById(props.componentDataList, selectedId.value as string))
 
 const onStartNew = (e: MouseEvent, component: ComponentData) => {
-  startMove(e, component, MOVE_TYPE_NEW)
+  startMove(e, component, MovingType.NEW)
 }
 // 开始拖拽组建，移动，新增或缩放
 const startMove = (e: MouseEvent, component: ComponentData, type: MovingType) => {
@@ -69,7 +69,7 @@ const startMove = (e: MouseEvent, component: ComponentData, type: MovingType) =>
     return
   }
 
-  if (type === MOVE_TYPE_RESIZE && !componentHasUi(component)) {
+  if (type === MovingType.RESIZE && !componentHasUi(component)) {
     return
   }
 
@@ -81,17 +81,17 @@ const startMove = (e: MouseEvent, component: ComponentData, type: MovingType) =>
   startSpace.width = component.width
   startSpace.height = component.height
 
-  if (curType.value === MOVE_TYPE_NEW || curType.value === MOVE_TYPE_MOVE) {
+  if (curType.value === MovingType.NEW || curType.value === MovingType.MOVE) {
     // 新增组件时，鼠标偏移默认为 DRAGGING_MOUSE_OFFSET，否则需要计算
-    mouseOffset.left = type === MOVE_TYPE_NEW ? DRAGGING_MOUSE_OFFSET : (e.clientX - draggingComponent.value.left - EDITOR_LEFT)
-    mouseOffset.top = type === MOVE_TYPE_NEW ? DRAGGING_MOUSE_OFFSET : (e.clientY - draggingComponent.value.top - EDITOR_TOP)
+    mouseOffset.left = type === MovingType.NEW ? DRAGGING_MOUSE_OFFSET : (e.clientX - draggingComponent.value.left - EDITOR_LEFT)
+    mouseOffset.top = type === MovingType.NEW ? DRAGGING_MOUSE_OFFSET : (e.clientY - draggingComponent.value.top - EDITOR_TOP)
   }
 }
 // 停止鼠标拖动
 const stop = () => {
   isMoving.value = false
   draggingComponent.value = undefined
-  curType.value = null
+  curType.value = undefined
 }
 useEventListener(document, 'mousemove', (_e: Event) => {
   const dc = draggingComponent.value
@@ -106,7 +106,7 @@ useEventListener(document, 'mousemove', (_e: Event) => {
   const deltaY = e.clientY - startSpace.top
 
   if (
-    (curType.value === MOVE_TYPE_NEW || curType.value === MOVE_TYPE_MOVE)
+    (curType.value === MovingType.NEW || curType.value === MovingType.MOVE)
     && (Math.abs(deltaX) > LAZY_DELTA || Math.abs(deltaY) > LAZY_DELTA)
   ) {
     isMoving.value = true
@@ -114,13 +114,13 @@ useEventListener(document, 'mousemove', (_e: Event) => {
     dc.top = deltaY + startSpace.top - mouseOffset.top - EDITOR_TOP
 
     // 移动组件时，不能拖到编辑器外面
-    if (curType.value === MOVE_TYPE_MOVE) {
+    if (curType.value === MovingType.MOVE) {
       dc.left = Math.max(dc.left, 0)
       dc.top = Math.max(dc.top, 0)
     }
   }
 
-  if (curType.value === MOVE_TYPE_RESIZE) {
+  if (curType.value === MovingType.RESIZE) {
     const cd = componentMap[dc.componentName]
     isMoving.value = true
     dc.width = Math.max((cd?.minWidthUnit || MIN_WIDTH_UNIT) * GRID_WIDTH, deltaX + startSpace.width)
@@ -143,7 +143,7 @@ useEventListener(document, 'mouseup', (_e: Event) => {
   c.width = hasUI ? ps.width : 0
   c.height = hasUI ? ps.height : 0
 
-  if (curType.value === MOVE_TYPE_NEW) {
+  if (curType.value === MovingType.NEW) {
     emits('add', { ...c })
   }
   selectedId.value = c.id
@@ -182,7 +182,7 @@ const placeholderSpace = computed<Space>(() => {
     space[key] = Math.round(val / gridValue) * gridValue
   }
 
-  if (curType.value === MOVE_TYPE_NEW && (space.left < 0 || space.top < 0)) {
+  if (curType.value === MovingType.NEW && (space.left < 0 || space.top < 0)) {
     space.width = 0
     space.height = 0
   } else {
@@ -205,7 +205,7 @@ const placeholderSpaceStyles = computed(() => {
 
 const onStartMove = (e: MouseEvent, component: ComponentData) => {
   selectedId.value = component.id
-  startMove(e, component, MOVE_TYPE_MOVE)
+  startMove(e, component, MovingType.MOVE)
 }
 const onRemove = (i: number) => {
   emits('remove', i)
@@ -213,7 +213,7 @@ const onRemove = (i: number) => {
 }
 
 const onStartResize = (e: MouseEvent, component: ComponentData) => {
-  startMove(e, component, MOVE_TYPE_RESIZE)
+  startMove(e, component, MovingType.RESIZE)
 }
 // 更新组件数据中的 setting 值
 const onUpdateSettingValues = (setting: KeyValue) => {
@@ -269,7 +269,7 @@ const onSave = () => {
         <div class="content-2">
           <div class="placeholder" :style="placeholderSpaceStyles"/>
           <BComponent
-            v-if="curType === MOVE_TYPE_NEW && isMoving && draggingComponent"
+            v-if="curType === MovingType.NEW && isMoving && draggingComponent"
             :data="draggingComponent"
           />
           <template v-for="(componentData, index) in componentDataList" :key="componentData.id">

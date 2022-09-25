@@ -1,8 +1,7 @@
-import { EditorMode } from '@/components/page-editor/types'
 import { readonly, ref } from 'vue'
-import { EDITOR_MODE_PAGE } from '@/libs/consts'
+import { EditorMode } from '@/libs/consts'
 
-const currentMode = ref<EditorMode>(EDITOR_MODE_PAGE)
+const currentMode = ref<EditorMode>(EditorMode.PAGE)
 
 export default () => {
   const changeMode = (mode: EditorMode) => {
