@@ -7,28 +7,36 @@ export default defineComponent({
 </script>
 
 <script setup lang="ts">
-import { PageData } from '@/components/editor/types'
 import BLayout from '@/components/layout/BLayout.vue'
 import BChangeMode from '@/components/editor/BChangeMode.vue'
 import BSvgIcon from '@/components/svg-icon/BSvgIcon.vue'
 import { componentMap } from '@/components/b-components'
 import BEventItem from '@/components/event-editor/BEventItem.vue'
+import { pageData } from '@/components/editor/usePageData'
 
-const props = defineProps<{
-  pageData: PageData
-}>()
-
-defineEmits<{
-  (e: 'remove', index: number): void
-  (e: 'add', index: number): void
-}>()
+const events = pageData.events
+const removeEvent = (index: number) => {
+  events.splice(index, 1)
+}
+const addEvent = (index: number) => {
+  events.splice(index + 1, 0, {
+    trigger: {
+      id: '',
+      event: '',
+    },
+    action: {
+      id: '',
+      action: '',
+    },
+  })
+}
 
 const getKey = (index: number) => {
   return Symbol(index)
 }
 
 const onSave = () => {
-  console.log(JSON.stringify(props.pageData.events, null, 2))
+  console.log(JSON.stringify(pageData.events, null, 2))
 }
 </script>
 
@@ -67,13 +75,12 @@ const onSave = () => {
               v-for="(event, index) in pageData.events"
               :key="getKey(index)"
               :event="event"
-              :page-data="pageData"
-              @remove="$emit('remove', index)"
-              @add="$emit('add', index)"
+              @remove="removeEvent(index)"
+              @add="addEvent(index)"
             />
           </div>
           <div style="text-align: center; margin-top: 10px;">
-            <AButton type="primary" @click="$emit('add', pageData.events.length - 1)">添加事件</AButton>
+            <AButton type="primary" @click="addEvent(pageData.events.length - 1)">添加事件</AButton>
           </div>
         </div>
       </div>

@@ -7,17 +7,16 @@ export default defineComponent({
 </script>
 
 <script setup lang="ts">
-import { PageData } from '@/components/editor/types'
-import { computed, inject, reactive, watch, Ref } from 'vue'
+import { computed, reactive, watch } from 'vue'
 import { EventData } from '@/components/event-editor/types'
-import { selectFilterOption, getComponentDefById } from '@/libs/utils'
+import { selectFilterOption } from '@/libs/utils'
 import _map from 'lodash/map'
 import { PlusOutlined, MinusOutlined } from '@ant-design/icons-vue'
 import { commonActions } from '@/components/event-editor'
-import { SelectOptions } from '@/types/common'
+import { getComponentDefById } from '@/components/editor/useComponents'
+import { componentSelectOptions } from '@/components/editor/useComponentSelectOptions'
 
 const props = defineProps<{
-  pageData: PageData
   event: EventData
 }>()
 
@@ -28,15 +27,13 @@ defineEmits<{
 
 const data = reactive<EventData>(props.event)
 
-const componentSelectOptions = inject('componentSelectOptions') as Ref<SelectOptions<string>>
-
 const componentTriggerOptions = computed(() => {
-  const setting = getComponentDefById(props.pageData.components, data.trigger.id)?.eventSetting?.trigger || {}
+  const setting = getComponentDefById(data.trigger.id)?.eventSetting?.trigger || {}
   return _map(setting, (s, key) => ({ label: s.showName, value: key }))
 })
 
 const componentActionOptions = computed(() => {
-  const cd = getComponentDefById(props.pageData.components, data.action.id)
+  const cd = getComponentDefById(data.action.id)
   if (!cd) {
     return []
   }

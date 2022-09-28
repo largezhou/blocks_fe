@@ -21,21 +21,16 @@ import {
   MovingType,
 } from '@/libs/consts'
 import BComponent from '@/components/page-editor/BComponent.vue'
-import { definitionToData, getComponentById } from '@/libs/utils'
 import BSettings from '@/components/page-editor/BSettings.vue'
 import { KeyValue } from '@/types/common'
 import BLayout from '@/components/layout/BLayout.vue'
 import BChangeMode from '@/components/editor/BChangeMode.vue'
-
-const props = defineProps<{
-  // 页面上的所有组件列表
-  componentDataList: ComponentData[]
-}>()
-
-const emits = defineEmits<{
-  (e: 'add', data: ComponentData): void
-  (e: 'remove', index: number): void
-}>()
+import {
+  componentDataList,
+  getComponentById, removeComponent, addComponent,
+  definitionToData,
+} from '@/components/editor/useComponents'
+import usePlaceholder from '@/components/editor/usePlaceholder'
 
 // 正在拖动的组件
 const draggingComponent = ref<ComponentData>()
@@ -58,11 +53,10 @@ const isMoving = ref(false)
 // 当前选中组件 ID
 const selectedId = ref<string>()
 // 当前选中的组件
-const selectedComponent = computed(() => getComponentById(props.componentDataList, selectedId.value as string))
+const selectedComponent = computed(() => getComponentById(selectedId.value as string))
 
-const onStartNew = (e: MouseEvent, component: ComponentData) => {
-  startMove(e, component, MovingType.NEW)
-}
+const { placeholderSpace, placeholderSpaceStyles } = usePlaceholder(draggingComponent, isMoving, curType)
+
 // 开始拖拽组建，移动，新增或缩放
 const startMove = (e: MouseEvent, component: ComponentData, type: MovingType) => {
   if (e.buttons !== 1) {
@@ -87,6 +81,17 @@ const startMove = (e: MouseEvent, component: ComponentData, type: MovingType) =>
     mouseOffset.top = type === MovingType.NEW ? DRAGGING_MOUSE_OFFSET : (e.clientY - draggingComponent.value.top - EDITOR_TOP)
   }
 }
+const onStartNew = (e: MouseEvent, component: ComponentData) => {
+  startMove(e, component, MovingType.NEW)
+}
+const onStartMove = (e: MouseEvent, component: ComponentData) => {
+  selectedId.value = component.id
+  startMove(e, component, MovingType.MOVE)
+}
+const onStartResize = (e: MouseEvent, component: ComponentData) => {
+  startMove(e, component, MovingType.RESIZE)
+}
+
 // 停止鼠标拖动
 const stop = () => {
   isMoving.value = false
@@ -144,76 +149,15 @@ useEventListener(document, 'mouseup', (_e: Event) => {
   c.height = hasUI ? ps.height : 0
 
   if (curType.value === MovingType.NEW) {
-    emits('add', { ...c })
+    addComponent({ ...c })
   }
   selectedId.value = c.id
   stop()
 })
 
-const placeholderSpace = computed<Space>(() => {
-  const dc = draggingComponent.value
-  const space: Space = {
-    left: -9999,
-    top: -9999,
-    height: 0,
-    width: 0,
-  }
-
-  if (!isMoving.value || !dc) {
-    return space
-  }
-
-  for (const key of (['left', 'top', 'width', 'height'] as (keyof Space)[])) {
-    let gridValue
-    if (key === 'left' || key === 'width') {
-      gridValue = GRID_WIDTH
-    } else {
-      gridValue = GRID_HEIGHT
-    }
-
-    let val
-    if (key === 'width' || key === 'height') {
-      // 无 UI 组件的尺寸为 0，占位元素，显示为 2 个单位的长宽
-      val = dc[key] || (MIN_HEIGHT_UNIT * gridValue)
-    } else {
-      val = dc[key]
-    }
-
-    space[key] = Math.round(val / gridValue) * gridValue
-  }
-
-  if (curType.value === MovingType.NEW && (space.left < 0 || space.top < 0)) {
-    space.width = 0
-    space.height = 0
-  } else {
-    // 不是新添加组件时，禁止拖到编辑器外面
-    space.left = Math.max(space.left, 0)
-    space.top = Math.max(space.top, 0)
-  }
-
-  return space
-})
-const placeholderSpaceStyles = computed(() => {
-  const s = placeholderSpace.value
-  return {
-    width: `${s.width}px`,
-    height: `${s.height}px`,
-    left: `${s.left}px`,
-    top: `${s.top}px`,
-  }
-})
-
-const onStartMove = (e: MouseEvent, component: ComponentData) => {
-  selectedId.value = component.id
-  startMove(e, component, MovingType.MOVE)
-}
 const onRemove = (i: number) => {
-  emits('remove', i)
+  removeComponent(i)
   selectedId.value = undefined
-}
-
-const onStartResize = (e: MouseEvent, component: ComponentData) => {
-  startMove(e, component, MovingType.RESIZE)
 }
 // 更新组件数据中的 setting 值
 const onUpdateSettingValues = (setting: KeyValue) => {
@@ -229,7 +173,7 @@ const onUpdateShowName = (val: string) => {
 }
 
 const onSave = () => {
-  console.log(JSON.stringify(props.componentDataList, null, 2))
+  console.log(JSON.stringify(componentDataList, null, 2))
 }
 </script>
 

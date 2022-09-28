@@ -15,23 +15,19 @@ import {
 import { KeyValue } from '@/types/common'
 import { componentMap } from '@/components/b-components'
 import _set from 'lodash/set'
-import { PageData } from '@/components/editor/types'
 import BLayout from '@/components/layout/BLayout.vue'
 import BChangeMode from '@/components/editor/BChangeMode.vue'
 import { EventData, SettingAction } from '@/components/event-editor/types'
 import { commonActions } from '@/components/event-editor'
-
-const props = defineProps<{
-  pageData: PageData
-}>()
+import { pageData } from '@/components/editor/usePageData'
 
 const compRefMap = ref<KeyValue<ComponentPublicInstance | undefined>>({})
 // 页面组件信息，避免修改传进来的数据，简单深拷贝一下
-const components: ComponentData[] = JSON.parse(JSON.stringify(props.pageData.components || []))
+const components: ComponentData[] = JSON.parse(JSON.stringify(pageData.components || []))
 // 所有组件的 ID 到 组件配置的映射
 const componentSettingMap = ref<KeyValue<KeyValue>>({})
 // 事件配置
-const events: EventData[] = JSON.parse(JSON.stringify(props.pageData.events || []))
+const events: EventData[] = JSON.parse(JSON.stringify(pageData.events || []))
 /**
  * 组件 ID 到组件事件的回调函数数组
  *
