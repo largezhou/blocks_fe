@@ -1,5 +1,6 @@
 import { ComponentPropsSettings } from '@/components/b-components/types'
 import { EventSetting } from '@/components/event-editor/types'
+import { AssignValueType } from '@/libs/consts'
 
 export const settings: ComponentPropsSettings = {
   text: {
@@ -21,9 +22,10 @@ export const settings: ComponentPropsSettings = {
 }
 
 export const eventSetting: EventSetting = {
-  value: {
+  assign: {
     inputValue: {
       showName: '值',
+      type: AssignValueType.OUT,
     },
   },
 }

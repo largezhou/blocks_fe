@@ -1,4 +1,5 @@
 import { KeyValue } from '@/types/common'
+import { AssignValueType } from '@/libs/consts'
 
 export interface SettingAction {
   showName: string
@@ -14,14 +15,15 @@ export interface SettingTrigger {
   event: string
 }
 
-export interface SettingValue {
+export interface SettingAssign {
   showName: string
+  type: AssignValueType
 }
 
 export interface EventSetting {
   action?: KeyValue<SettingAction>
   trigger?: KeyValue<SettingTrigger>
-  value?: KeyValue<SettingValue>
+  assign?: KeyValue<SettingAssign>
 }
 
 interface DataTrigger {

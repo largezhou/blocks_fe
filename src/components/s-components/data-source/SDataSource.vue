@@ -10,10 +10,11 @@ export default defineComponent({
 import { computed, watch } from 'vue'
 import { SelectOptions } from '@/types/common'
 import { selectFilterOption } from '@/libs/utils'
-import _map from 'lodash/map'
-import { SettingValue } from '@/components/event-editor/types'
+import { SettingAssign } from '@/components/event-editor/types'
 import { getComponentDefById } from '@/components/editor/useComponents'
 import { componentSelectOptions } from '@/components/editor/useComponentSelectOptions'
+import { AssignValueType } from '@/libs/consts'
+import _forEach from 'lodash/forEach'
 
 interface DataSource {
   id?: string
@@ -22,6 +23,7 @@ interface DataSource {
 
 const props = defineProps<{
   value?: DataSource
+  type: AssignValueType.IN | AssignValueType.OUT
 }>()
 const emits = defineEmits<{
   (e: 'update:value', val: DataSource): void
@@ -32,9 +34,14 @@ const dataSelectOptions = computed<SelectOptions>(() => {
     return []
   }
   const cd = getComponentDefById(props.value.id)
-  return _map(cd?.eventSetting?.value, (s: SettingValue, val: string) => {
-    return { label: s.showName, value: val }
+  const options: SelectOptions = []
+  _forEach(cd?.eventSetting?.assign, (s: SettingAssign, val: string) => {
+    if (s.type === props.type || s.type === AssignValueType.BOTH) {
+      options.push({ label: s.showName, value: val })
+    }
   })
+
+  return options
 })
 
 const onUpdateValue = (key: keyof DataSource, val: any) => {

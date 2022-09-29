@@ -40,3 +40,19 @@ export enum EditorMode {
   EVENT = 'event',
   TESTER = 'tester',
 }
+
+// 组件提供的值的类型
+export enum AssignValueType {
+  /**
+   * 只能被其他组件赋值
+   */
+  IN = 'in',
+  /**
+   * 只能赋值给其他组件
+   */
+  OUT = 'out',
+  /**
+   * 可以赋值也可以被赋值
+   */
+  BOTH = 'both',
+}

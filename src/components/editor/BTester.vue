@@ -136,7 +136,8 @@ const initEventFlow = () => {
     _set(callbackMap, `${trigger.id}.${trigger.event}`, callbacks)
     _set(vOnMap, `${trigger.id}.${trigger.event}`, () => {
       for (const callback of callbacks) {
-        callback()
+        // 异步执行所有事件触发时需要执行的操作
+        window.setTimeout(callback, 0)
       }
     })
   }

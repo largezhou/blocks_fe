@@ -1,5 +1,6 @@
 import { ComponentPropsSettings } from '@/components/b-components/types'
 import { EventSetting } from '@/components/event-editor/types'
+import { AssignValueType } from '@/libs/consts'
 
 export const settings: ComponentPropsSettings = {
   label: {
@@ -60,9 +61,10 @@ export const eventSetting: EventSetting = {
       event: 'change',
     },
   },
-  value: {
+  assign: {
     inputValue: {
       showName: '值',
+      type: AssignValueType.BOTH,
     },
   },
 }

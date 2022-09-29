@@ -59,7 +59,7 @@ watch(() => data.action.id, () => {
 <template>
   <ACard class="event-item">
     <AForm layout="inline">
-      <AFormItem label="当组件">
+      <AFormItem label="当">
         <ASelect
           v-model:value="data.trigger.id"
           show-search

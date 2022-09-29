@@ -71,6 +71,36 @@ const mockEventList: EventData[] = [
       action: "assign",
     },
   },
+  {
+    trigger: {
+      id: "BButton-9yjy7o5m",
+      event: "click",
+    },
+    action: {
+      id: "BButton-9yjy7o5m",
+      action: "changeDisabledToTrue",
+    },
+  },
+  {
+    trigger: {
+      id: "BButton-9yjy7o5m",
+      event: "click",
+    },
+    action: {
+      id: "BRequest-bz02a9ac",
+      action: "startRequest",
+    },
+  },
+  {
+    trigger: {
+      id: "BRequest-bz02a9ac",
+      event: "done",
+    },
+    action: {
+      id: "BButton-9yjy7o5m",
+      action: "changeDisabledToFalse",
+    },
+  },
 ]
 
 export default mockEventList

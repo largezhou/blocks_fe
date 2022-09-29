@@ -150,6 +150,24 @@ const mockComponentDataList: ComponentData[] = [
     left: 0,
     top: 506,
   },
+  {
+    showName: "接口-测试",
+    componentName: "BRequest",
+    id: "BRequest-bz02a9ac",
+    setting: {
+      method: "POST",
+      url: "",
+      messageKey: "message",
+      codeKey: "code",
+      successCode: 0,
+      confirm: true,
+      showMessage: true,
+    },
+    width: 0,
+    height: 0,
+    left: 228,
+    top: 368,
+  },
 ]
 
 export default mockComponentDataList

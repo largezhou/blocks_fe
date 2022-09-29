@@ -9,7 +9,6 @@ export default defineComponent({
   minHeightUnit: 2,
   icon: 'button',
   category: '通用',
-  showNameAs: 'text',
   settings,
   eventSetting,
 })
