@@ -1,4 +1,5 @@
 <script lang="ts">
+import { defineComponent } from 'vue'
 import BSvgIcon from '@/components/svg-icon/BSvgIcon.vue'
 import { MIN_HEIGHT_UNIT, MIN_WIDTH_UNIT } from '@/libs/consts'
 

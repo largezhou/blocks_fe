@@ -5,7 +5,6 @@
     "createApp": true,
     "customRef": true,
     "defineAsyncComponent": true,
-    "defineComponent": true,
     "effectScope": true,
     "getCurrentInstance": true,
     "getCurrentScope": true,

@@ -1,4 +1,6 @@
 <script lang="ts">
+import { defineComponent } from 'vue'
+
 export default defineComponent({
   name: 'BPageEditor',
 })
@@ -28,6 +30,7 @@ import {
   definitionToData,
 } from '@/components/editor/useComponents'
 import usePlaceholder from '@/components/editor/usePlaceholder'
+import { provideIsEditMode } from '@/components/editor/useEditMode'
 
 // 正在拖动的组件
 const draggingComponent = ref<ComponentData>()
@@ -53,6 +56,8 @@ const selectedId = ref<string>()
 const selectedComponent = computed(() => getComponentById(selectedId.value as string))
 
 const { placeholderSpace, placeholderSpaceStyles } = usePlaceholder(draggingComponent, isMoving, curType)
+
+provideIsEditMode()
 
 // 开始拖拽组建，移动，新增或缩放
 const startMove = (e: MouseEvent, component: ComponentData, type: MovingType) => {

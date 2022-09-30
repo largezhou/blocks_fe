@@ -18,6 +18,9 @@ export default defineConfig({
       eslintrc: {
         enabled: true,
       },
+      ignore: [
+        'defineComponent',
+      ],
     }),
   ],
   resolve: {
