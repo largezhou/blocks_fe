@@ -1,5 +1,4 @@
 <script lang="ts">
-import { defineComponent } from 'vue'
 import { settings, eventSetting } from './settings'
 
 export default defineComponent({
@@ -15,7 +14,6 @@ export default defineComponent({
 </script>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import _get from 'lodash/get'
 import { message, Modal } from 'ant-design-vue'
 

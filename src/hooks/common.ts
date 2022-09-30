@@ -1,4 +1,4 @@
-import { ComponentInternalInstance, onMounted, onUnmounted } from 'vue'
+import { ComponentInternalInstance } from 'vue'
 
 /**
  * 设置一个定时器，并在 unmounted 的时候销毁

@@ -1,6 +1,4 @@
 <script lang="ts">
-import { defineComponent } from 'vue'
-
 export default defineComponent({
   name: 'BComponent',
 })
@@ -11,7 +9,6 @@ import BSvgIcon from '@/components/svg-icon/BSvgIcon.vue'
 import { ComponentData } from '@/components/page-editor/types'
 import { componentHasUi, componentMap } from '@/components/b-components'
 import { GRID_WIDTH, GRID_HEIGHT, MIN_HEIGHT_UNIT, MIN_WIDTH_UNIT } from '@/libs/consts'
-import { computed } from 'vue'
 import BComponentNotExists from '@/components/b-components/component-not-exists/BComponentNotExists.vue'
 import { CloseCircleFilled } from '@ant-design/icons-vue'
 

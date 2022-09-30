@@ -1,13 +1,11 @@
 <script lang="ts">
-import { defineComponent } from 'vue'
-
 export default defineComponent({
   name: 'BTester',
 })
 </script>
 
 <script setup lang="ts">
-import { ComponentPublicInstance, onMounted, provide, reactive, Ref, ref } from 'vue'
+import { ComponentPublicInstance, Ref } from 'vue'
 import { ComponentData } from '@/components/page-editor/types'
 import {
   MIN_WIDTH_UNIT, MIN_HEIGHT_UNIT, GRID_WIDTH, GRID_HEIGHT,

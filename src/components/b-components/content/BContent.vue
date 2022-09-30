@@ -1,5 +1,4 @@
 <script lang="ts">
-import { defineComponent } from 'vue'
 import { settings, eventSetting } from './settings'
 
 export default defineComponent({
@@ -15,7 +14,6 @@ export default defineComponent({
 </script>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
 import { safeJsonParse } from '@/libs/utils'
 
 const props = defineProps<{

@@ -1,5 +1,4 @@
 <script lang="ts">
-import { defineComponent } from 'vue'
 import { settings, eventSetting } from './settings'
 
 export default defineComponent({
@@ -15,8 +14,6 @@ export default defineComponent({
 </script>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-
 const props = withDefaults(
   defineProps<{
     label?: string,

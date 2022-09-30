@@ -1,4 +1,3 @@
-import { ref } from 'vue'
 import { EditorMode } from '@/libs/consts'
 
 export const currentMode = ref<EditorMode>(EditorMode.PAGE)

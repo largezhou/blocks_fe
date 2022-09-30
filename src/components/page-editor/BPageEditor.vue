@@ -1,6 +1,4 @@
 <script lang="ts">
-import { defineComponent } from 'vue'
-
 export default defineComponent({
   name: 'BPageEditor',
 })
@@ -9,7 +7,6 @@ export default defineComponent({
 <script setup lang="ts">
 import { groupComponents, componentMap, componentHasUi } from '@/components/b-components'
 import BSvgIcon from '@/components/svg-icon/BSvgIcon.vue'
-import { ref, computed } from 'vue'
 import { useEventListener } from '@/hooks/common'
 import { Position, ComponentData, Space } from '@/components/page-editor/types'
 import {

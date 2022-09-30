@@ -2,8 +2,8 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import path from 'path'
+import AutoImport from 'unplugin-auto-import/vite'
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
@@ -13,10 +13,34 @@ export default defineConfig({
       ],
       symbolId: 'icon-[dir]-[name]',
     }),
+    AutoImport({
+      imports: ['vue', 'vue-router'],
+      eslintrc: {
+        enabled: true,
+      },
+    }),
   ],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),
+    },
+  },
+  css: {
+    preprocessorOptions: {
+      less: {
+        javascriptEnabled: true,
+      },
+    },
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id: string) {
+          if (id.includes('ant-design-vue')) {
+            return 'antd'
+          }
+        },
+      },
     },
   },
 })

@@ -1,5 +1,4 @@
 <script lang="ts">
-import { defineComponent } from 'vue'
 import { settings, eventSetting } from './settings'
 
 export default defineComponent({
@@ -16,7 +15,6 @@ export default defineComponent({
 
 <script setup lang="ts">
 import { useInterval } from '@/hooks/common'
-import { getCurrentInstance } from 'vue'
 
 const props = defineProps({
   time: {

@@ -1,13 +1,10 @@
 <script lang="ts">
-import { defineComponent } from 'vue'
-
 export default defineComponent({
   name: 'SDataSource',
 })
 </script>
 
 <script setup lang="ts">
-import { computed, watch } from 'vue'
 import { SelectOptions } from '@/types/common'
 import { selectFilterOption } from '@/libs/utils'
 import { SettingAssign } from '@/components/event-editor/types'

@@ -1,5 +1,4 @@
 <script lang="ts">
-import { defineComponent } from 'vue'
 import { settings, eventSetting } from './settings'
 
 export default defineComponent({

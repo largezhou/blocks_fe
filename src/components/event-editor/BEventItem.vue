@@ -1,13 +1,10 @@
 <script lang="ts">
-import { defineComponent } from 'vue'
-
 export default defineComponent({
   name: 'BEventItem',
 })
 </script>
 
 <script setup lang="ts">
-import { computed, reactive, watch } from 'vue'
 import { EventData } from '@/components/event-editor/types'
 import { selectFilterOption } from '@/libs/utils'
 import _map from 'lodash/map'

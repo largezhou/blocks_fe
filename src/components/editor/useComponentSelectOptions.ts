@@ -1,4 +1,3 @@
-import { ref, watch } from 'vue'
 import { SelectOptions } from '@/types/common'
 import _debounce from 'lodash/debounce'
 import { componentDataList } from '@/components/editor/useComponents'

@@ -1,5 +1,4 @@
 <script lang="ts">
-import { defineComponent } from 'vue'
 import { settings, eventSetting } from './settings'
 
 export default defineComponent({
@@ -15,7 +14,7 @@ export default defineComponent({
 </script>
 
 <script setup lang="ts">
-import { ComponentPublicInstance, inject, Ref } from 'vue'
+import { ComponentPublicInstance, Ref } from 'vue'
 import { KeyValue } from '@/types/common'
 
 interface DataSource {

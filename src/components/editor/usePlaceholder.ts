@@ -1,4 +1,4 @@
-import { computed, Ref } from 'vue'
+import { Ref } from 'vue'
 import { ComponentData, Space } from '@/components/page-editor/types'
 import { GRID_HEIGHT, GRID_WIDTH, MIN_HEIGHT_UNIT, MovingType } from '@/libs/consts'
 
