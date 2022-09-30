@@ -1,9 +1,9 @@
 import { ComponentPropsSettings } from '@/components/b-components/types'
 import { EventSetting } from '@/components/event-editor/types'
-import { AssignValueType } from '@/libs/consts'
+import { AssignValueFlow, AssignValueType } from '@/libs/consts'
 
 export const settings: ComponentPropsSettings = {
-  text: {
+  value: {
     label: '内容',
     componentName: 'ATextarea',
     value: undefined,
@@ -25,7 +25,8 @@ export const eventSetting: EventSetting = {
   assign: {
     inputValue: {
       showName: '值',
-      type: AssignValueType.OUT,
+      flow: AssignValueFlow.OUT,
+      type: AssignValueType.DATA,
     },
   },
 }

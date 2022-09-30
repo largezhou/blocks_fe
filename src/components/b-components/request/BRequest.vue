@@ -103,7 +103,6 @@ const startRequest = async () => {
 
 defineExpose({
   startRequest,
-  request,
   response,
 })
 </script>

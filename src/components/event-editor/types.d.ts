@@ -1,5 +1,5 @@
 import { KeyValue } from '@/types/common'
-import { AssignValueType } from '@/libs/consts'
+import { AssignValueFlow, AssignValueType } from '@/libs/consts'
 
 export interface SettingAction {
   showName: string
@@ -17,6 +17,7 @@ export interface SettingTrigger {
 
 export interface SettingAssign {
   showName: string
+  flow: AssignValueFlow
   type: AssignValueType
 }
 

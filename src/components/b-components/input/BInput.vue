@@ -28,7 +28,7 @@ const props = withDefaults(
   {
     label: '输入框',
     name: 'input',
-    value: null,
+    value: undefined,
     extra: '',
     placeholder: '请输入...',
     allowClear: true,
@@ -38,23 +38,22 @@ const props = withDefaults(
 
 const emits = defineEmits<{
   (e: 'change'): void
+  (e: 'update:value', val: any): void
 }>()
 
-const inputValue = ref(props.value)
-watch(inputValue, () => {
-  emits('change')
-})
+const onUpdateValue = (val: any) => {
+  emits('update:value', val)
+}
 
 const clear = () => {
-  if (inputValue.value === undefined || inputValue.value === null || inputValue.value === '') {
+  if (props.value === undefined || props.value === null || props.value === '') {
     return
   }
-  inputValue.value = undefined
+  emits('update:value', undefined)
 }
 
 defineExpose({
   clear,
-  inputValue,
 })
 </script>
 
@@ -62,10 +61,11 @@ defineExpose({
   <div class="b-input ant-form ant-form-vertical">
     <AFormItem :label="label" :extra="extra">
       <AInput
-        v-model:value="inputValue"
+        :value="value"
         :allow-clear="allowClear"
         :placeholder="placeholder"
         :disabled="disabled"
+        @update:value="onUpdateValue"
       />
     </AFormItem>
   </div>

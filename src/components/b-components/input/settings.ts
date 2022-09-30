@@ -1,6 +1,6 @@
 import { ComponentPropsSettings } from '@/components/b-components/types'
 import { EventSetting } from '@/components/event-editor/types'
-import { AssignValueType } from '@/libs/consts'
+import { AssignValueFlow, AssignValueType } from '@/libs/consts'
 
 export const settings: ComponentPropsSettings = {
   label: {
@@ -27,12 +27,6 @@ export const settings: ComponentPropsSettings = {
     label: '提示信息',
     componentName: 'AInput',
     value: '请输入...',
-  },
-  controlHidden: {
-    label: '隐藏',
-    componentName: 'ACheckbox',
-    valueName: 'checked',
-    value: false,
   },
   allowClear: {
     label: '是否可清除',
@@ -62,9 +56,10 @@ export const eventSetting: EventSetting = {
     },
   },
   assign: {
-    inputValue: {
+    value: {
       showName: '值',
-      type: AssignValueType.BOTH,
+      flow: AssignValueFlow.BOTH,
+      type: AssignValueType.PROP,
     },
   },
 }

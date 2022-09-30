@@ -28,12 +28,6 @@ export const settings: ComponentPropsSettings = {
       ],
     },
   },
-  controlHidden: {
-    label: '隐藏',
-    componentName: 'ACheckbox',
-    valueName: 'checked',
-    value: false,
-  },
   danger: {
     label: '设置为危险按钮',
     componentName: 'ACheckbox',

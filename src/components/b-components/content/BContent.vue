@@ -18,22 +18,20 @@ export default defineComponent({
 import { safeJsonParse } from '@/libs/utils'
 
 const props = defineProps<{
-  text?: string
+  value?: string
   isJson?: boolean
 }>()
 
-const inputText = ref(props.text)
+const emits = defineEmits<{
+  (e: 'update:value', val?: string): void
+}>()
 
 const inputValue = computed({
   get() {
-    return props.isJson ? safeJsonParse(inputText.value) : inputText.value
+    return props.isJson ? safeJsonParse(props.value) : props.value
   },
   set(v?: any): void {
-    if (typeof v === 'string') {
-      inputText.value = v
-    } else if (props.isJson) {
-      inputText.value = JSON.stringify(v)
-    }
+    emits('update:value', typeof v === 'string' ? v : JSON.stringify(v))
   },
 })
 

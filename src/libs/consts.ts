@@ -41,8 +41,8 @@ export enum EditorMode {
   TESTER = 'tester',
 }
 
-// 组件提供的值的类型
-export enum AssignValueType {
+// 组件提供的值的流向
+export enum AssignValueFlow {
   /**
    * 只能被其他组件赋值
    */
@@ -55,4 +55,16 @@ export enum AssignValueType {
    * 可以赋值也可以被赋值
    */
   BOTH = 'both',
+}
+
+// 组件提供的值的类型
+export enum AssignValueType {
+  /**
+   * prop 值，通过 update:prop 更新
+   */
+  PROP = 'prop',
+  /**
+   * 组件实例数据，需要通过 defineExpose 暴露
+   */
+  DATA = 'data',
 }

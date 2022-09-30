@@ -11,7 +11,6 @@ import { EventData } from '@/components/event-editor/types'
 import { selectFilterOption } from '@/libs/utils'
 import _map from 'lodash/map'
 import { PlusOutlined, MinusOutlined } from '@ant-design/icons-vue'
-import { commonActions } from '@/components/event-editor'
 import { getComponentDefById } from '@/components/editor/useComponents'
 import { componentSelectOptions } from '@/components/editor/useComponentSelectOptions'
 
@@ -36,14 +35,7 @@ const componentActionOptions = computed(() => {
   if (!cd) {
     return []
   }
-  const setting = cd.eventSetting?.action || {}
-  let options = _map(setting, (s, key) => ({ label: s.showName, value: key }))
-
-  if (cd.settings?.controlHidden !== undefined) {
-    options = options.concat(_map(commonActions.controlHidden, (s, key) => ({ label: s.showName, value: key })))
-  }
-
-  return options
+  return _map(cd.eventSetting?.action || {}, (s, key) => ({ label: s.showName, value: key }))
 })
 
 watch(() => data.trigger.id, () => {

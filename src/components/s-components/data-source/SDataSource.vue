@@ -12,17 +12,26 @@ import { selectFilterOption } from '@/libs/utils'
 import { SettingAssign } from '@/components/event-editor/types'
 import { getComponentDefById } from '@/components/editor/useComponents'
 import { componentSelectOptions } from '@/components/editor/useComponentSelectOptions'
-import { AssignValueType } from '@/libs/consts'
+import { AssignValueFlow } from '@/libs/consts'
 import _forEach from 'lodash/forEach'
 
 interface DataSource {
+  /**
+   * 组件 ID
+   */
   id?: string
+  /**
+   * 组件中用来接收某个值的字段
+   */
   content?: any
 }
 
 const props = defineProps<{
   value?: DataSource
-  type: AssignValueType.IN | AssignValueType.OUT
+  /**
+   * 该组件作为数据源还是赋值目标
+   */
+  flow: AssignValueFlow.IN | AssignValueFlow.OUT
 }>()
 const emits = defineEmits<{
   (e: 'update:value', val: DataSource): void
@@ -35,7 +44,7 @@ const dataSelectOptions = computed<SelectOptions>(() => {
   const cd = getComponentDefById(props.value.id)
   const options: SelectOptions = []
   _forEach(cd?.eventSetting?.assign, (s: SettingAssign, val: string) => {
-    if (s.type === props.type || s.type === AssignValueType.BOTH) {
+    if (s.flow === props.flow || s.flow === AssignValueFlow.BOTH) {
       options.push({ label: s.showName, value: val })
     }
   })

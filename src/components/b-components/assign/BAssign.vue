@@ -17,9 +17,17 @@ export default defineComponent({
 <script setup lang="ts">
 import { ComponentPublicInstance, Ref } from 'vue'
 import { KeyValue } from '@/types/common'
+import { getComponentDefById } from '@/components/editor/useComponents'
+import { AssignValueType } from '@/libs/consts'
 
 interface DataSource {
+  /**
+   * 组件 ID
+   */
   id?: string
+  /**
+   * 组件中用来接收某个值的字段
+   */
   content?: any
 }
 
@@ -31,15 +39,40 @@ const props = defineProps<{
 const compRefMap = inject<Ref<KeyValue<ComponentPublicInstance | undefined>>>('compRefMap')
 
 const assign = () => {
-  const inRef = compRefMap?.value[props.in?.id as string]
-  const outRef = compRefMap?.value[props.out?.id as string]
+  const inId = props.in?.id as string
+  const outId = props.out?.id as string
+  const inContent = props.in?.content as string
+  const outContent = props.out?.content as string
 
+  const inRef = compRefMap?.value[inId]
+  const outRef = compRefMap?.value[outId]
   if (!inRef || !outRef) {
     return
   }
 
-  // @ts-expect-error 组件动态赋值
-  outRef[props.out?.content] = inRef[props.in?.content]
+  const inCd = getComponentDefById(inId)
+  const outCd = getComponentDefById(outId)
+  if (!inCd || !outCd) {
+    return
+  }
+
+  const inSetting = inCd.eventSetting?.assign?.[inContent]
+  const outSetting = outCd.eventSetting?.assign?.[outContent]
+  if (!inSetting || !outSetting) {
+    return
+  }
+
+  const val = outSetting.type === AssignValueType.DATA
+    // @ts-expect-error 组件动态赋值
+    ? outRef[outContent]
+    : outRef.$.props[props.out?.content]
+
+  if (inSetting.type === AssignValueType.DATA) {
+    // @ts-expect-error 组件动态赋值
+    inRef[inContent] = val
+  } else {
+    inRef.$.emit(`update:${props.in?.content}`, val)
+  }
 }
 
 defineExpose({

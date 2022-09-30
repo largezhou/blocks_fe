@@ -1,22 +1,22 @@
 import { ComponentPropsSettings } from '@/components/b-components/types'
 import { EventSetting } from '@/components/event-editor/types'
-import { AssignValueType } from '@/libs/consts'
+import { AssignValueFlow } from '@/libs/consts'
 
 export const settings: ComponentPropsSettings = {
-  in: {
+  out: {
     label: '数据源',
     componentName: 'SDataSource',
     value: undefined,
     setting: {
-      type: AssignValueType.OUT,
+      flow: AssignValueFlow.OUT,
     },
   },
-  out: {
+  in: {
     label: '赋值到',
     componentName: 'SDataSource',
     value: undefined,
     setting: {
-      type: AssignValueType.IN,
+      flow: AssignValueFlow.IN,
     },
   },
 }

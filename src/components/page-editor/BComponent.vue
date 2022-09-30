@@ -60,7 +60,7 @@ const onStartMove = (e: MouseEvent) => {
     class="component"
     :class="{
       selected: isSelected,
-      hidden: data?.setting?.controlHidden,
+      hidden: false,
     }"
     :style="spaceStyles"
     @mousedown.stop="onStartMove"

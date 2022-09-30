@@ -17,15 +17,16 @@ import { componentMap } from '@/components/b-components'
 import _set from 'lodash/set'
 import BLayout from '@/components/layout/BLayout.vue'
 import BChangeMode from '@/components/editor/BChangeMode.vue'
-import { EventData, SettingAction } from '@/components/event-editor/types'
-import { commonActions } from '@/components/event-editor'
+import { EventData } from '@/components/event-editor/types'
 import { pageData } from '@/components/editor/usePageData'
+import _keys from 'lodash/keys'
+import { getComponentDefById } from '@/components/editor/useComponents'
 
 const compRefMap = ref<KeyValue<ComponentPublicInstance | undefined>>({})
 // 页面组件信息，避免修改传进来的数据，简单深拷贝一下
 const components: ComponentData[] = JSON.parse(JSON.stringify(pageData.components || []))
 // 所有组件的 ID 到 组件配置的映射
-const componentSettingMap = ref<KeyValue<KeyValue>>({})
+const componentPropsMap = ref<KeyValue<KeyValue>>({})
 // 事件配置
 const events: EventData[] = JSON.parse(JSON.stringify(pageData.events || []))
 /**
@@ -59,6 +60,10 @@ const callbackMap: KeyValue<KeyValue<Function[] | undefined> | undefined> = {}
  * }
  */
 const vOnMap = reactive<KeyValue<KeyValue<Function> | undefined>>({})
+/**
+ * 各组件中各个 props 的更新函数，比如：update:value
+ */
+const vOnUpdateMap = reactive<KeyValue<KeyValue<Function>>>({})
 
 provide<Ref<KeyValue<ComponentPublicInstance | undefined>>>('compRefMap', compRefMap)
 
@@ -71,7 +76,23 @@ const updateCompRefList = (el: ComponentPublicInstance | null, component: Compon
 }
 
 for (const component of components) {
-  componentSettingMap.value[component.id] = component.setting
+  componentPropsMap.value[component.id] = component.setting
+  const cd = getComponentDefById(component.id)
+  _keys(cd?.settings || {}).forEach((key: string) => {
+    _set(vOnUpdateMap, `${component.id}.update:${key}`, (val: any) => componentPropsMap.value[component.id][key] = val)
+  })
+}
+
+/**
+ * 合并普通的事件和 update:xxx 事件
+ *
+ * @param id
+ */
+const getVOn = (id: string) => {
+  return {
+    ...(vOnMap[id] || {}),
+    ...(vOnUpdateMap[id] || {}),
+  }
 }
 
 const initEventFlow = () => {
@@ -97,37 +118,32 @@ const initEventFlow = () => {
 
     const actionRef = compRefMap.value[action.id]
     if (actionRef === undefined) {
-      console.warn(`动作组件, ID: ${trigger.id}, 找不到组件`)
+      console.warn(`动作组件, ID: ${action.id}, 找不到组件`)
       continue
     }
     const actionCD = componentMap[actionRef.$.type.name || '__not_exists__']
     if (actionCD === undefined) {
-      console.warn(`动作组件, ID: ${trigger.id}, componentName: ${actionRef.$.type.name}, 找不到组件定义`)
+      console.warn(`动作组件, ID: ${action.id}, componentName: ${actionRef.$.type.name}, 找不到组件定义`)
       continue
     }
-    let actionSetting = actionCD.eventSetting?.action?.[action.action]
-    if (actionSetting === undefined && actionCD.settings?.controlHidden !== undefined) {
-      actionSetting = commonActions.controlHidden[action.action]
-    }
-
+    const actionSetting = actionCD.eventSetting?.action?.[action.action]
     if (actionSetting === undefined) {
-      console.warn(`动作组件, ID: ${trigger.id}, componentName: ${actionRef.$.type.name}, 找不到组件动作: ${action.action}`)
+      console.warn(`动作组件, ID: ${action.id}, componentName: ${actionRef.$.type.name}, 找不到组件动作: ${action.action}`)
       continue
     }
 
     let callback: Function
-    const as = actionSetting as SettingAction
-    if (as.method) {
-      const c = actionRef.$.exposed?.[as.method as string]
+    if (actionSetting.method) {
+      const c = actionRef.$.exposed?.[actionSetting.method as string]
       if (typeof c === 'function') {
         callback = () => c()
       } else {
-        console.warn(`动作组件, ID: ${trigger.id}, componentName: ${actionRef.$.type.name}, 找不到组件方法: ${as.method}`)
+        console.warn(`动作组件, ID: ${action.id}, componentName: ${actionRef.$.type.name}, 找不到组件方法: ${actionSetting.method}`)
         continue
       }
     } else {
       callback = () => {
-        componentSettingMap.value[action.id][as.prop as string] = as.value
+        componentPropsMap.value[action.id][actionSetting.prop as string] = actionSetting.value
       }
     }
 
@@ -170,10 +186,9 @@ onMounted(() => {
           >
             <component
               :is="component.componentName"
-              v-show="!componentSettingMap[component.id].controlHidden"
               :ref="(el: ComponentPublicInstance | null) => updateCompRefList(el, component)"
-              v-bind="componentSettingMap[component.id]"
-              v-on="vOnMap[component.id] || {}"
+              v-bind="componentPropsMap[component.id]"
+              v-on="getVOn(component.id)"
             />
           </div>
         </div>
