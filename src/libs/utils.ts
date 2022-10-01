@@ -37,13 +37,13 @@ export const hiddenActions = (): KeyValue<SettingAction> => {
 /**
  * 获取通用的控制显隐的 prop 配置
  */
-export const hiddenSettings = (): ComponentPropsSettings => {
+export const hiddenSettings = (value = false): ComponentPropsSettings => {
   return {
     hidden: {
       label: '隐藏',
       componentName: 'ACheckbox',
       valueName: 'checked',
-      value: false,
+      value,
     },
   }
 }

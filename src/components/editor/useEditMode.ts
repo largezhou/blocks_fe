@@ -8,9 +8,13 @@ const KEY = 'isEditMode'
  * @param realVal 不在编辑模式下，提供该值，一般是 prop
  */
 export const valueForEditMode = <T>(editModeVal: T, realVal?: T): T | undefined => {
-  return inject<boolean>(KEY, false) ? editModeVal : realVal
+  return injectIsEditMode() ? editModeVal : realVal
 }
 
 export const provideIsEditMode = () => {
   provide(KEY, true)
+}
+
+export const injectIsEditMode = () => {
+  return inject<boolean>(KEY, false)
 }

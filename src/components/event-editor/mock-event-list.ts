@@ -7,8 +7,8 @@ const mockEventList: EventData[] = [
       event: 'click',
     },
     action: {
-      id: 'BAssign-e4n7hspg',
-      action: 'assign',
+      id: 'BModal-bcyk7q5j',
+      action: 'setToShow',
     },
   },
 ]

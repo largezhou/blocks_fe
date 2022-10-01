@@ -47,5 +47,6 @@ module.exports = {
     ],
     'vue/valid-template-root': 'off',
     'quote-props': ['error', 'as-needed'],
+    quotes: ['error', 'single'],
   },
 }

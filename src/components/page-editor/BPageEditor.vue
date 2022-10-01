@@ -20,7 +20,7 @@ import {
   MIN_WIDTH_UNIT, MIN_HEIGHT_UNIT,
   MovingType,
 } from '@/libs/consts'
-import BComponent from '@/components/page-editor/BComponent.vue'
+import BEditComponent from '@/components/page-editor/BEditComponent.vue'
 import BSettings from '@/components/page-editor/BSettings.vue'
 import { KeyValue } from '@/types/common'
 import BLayout from '@/components/layout/BLayout.vue'
@@ -215,12 +215,12 @@ const onSave = () => {
       <div class="content-1">
         <div class="content-2">
           <div class="placeholder" :style="placeholderSpaceStyles"/>
-          <BComponent
+          <BEditComponent
             v-if="curType === MovingType.NEW && isMoving && draggingComponent"
             :data="draggingComponent"
           />
           <template v-for="(componentData, index) in componentDataList" :key="componentData.id">
-            <BComponent
+            <BEditComponent
               :data="componentData"
               :selected-id="selectedId"
               @start-move="onStartMove"

@@ -9,9 +9,6 @@ export default defineComponent({
 <script setup lang="ts">
 import { ComponentPublicInstance, Ref } from 'vue'
 import { ComponentData } from '@/components/page-editor/types'
-import {
-  MIN_WIDTH_UNIT, MIN_HEIGHT_UNIT, GRID_WIDTH, GRID_HEIGHT,
-} from '@/libs/consts'
 import { KeyValue } from '@/types/common'
 import { componentMap } from '@/components/b-components'
 import _set from 'lodash/set'
@@ -21,6 +18,7 @@ import { EventData } from '@/components/event-editor/types'
 import { pageData } from '@/components/editor/usePageData'
 import _keys from 'lodash/keys'
 import { getComponentDefById } from '@/components/editor/useComponents'
+import BComponent from '@/components/component/BComponent.vue'
 
 const compRefMap = ref<KeyValue<ComponentPublicInstance | undefined>>({})
 // 页面组件信息，避免修改传进来的数据，简单深拷贝一下
@@ -66,6 +64,9 @@ const vOnMap = reactive<KeyValue<KeyValue<Function> | undefined>>({})
 const vOnUpdateMap = reactive<KeyValue<KeyValue<Function>>>({})
 
 provide<Ref<KeyValue<ComponentPublicInstance | undefined>>>('compRefMap', compRefMap)
+provide<KeyValue<KeyValue<Function> | undefined>>('vOnMap', vOnMap)
+provide<KeyValue<KeyValue<Function>>>('vOnUpdateMap', vOnUpdateMap)
+provide<Ref<KeyValue<KeyValue>>>('componentPropsMap', componentPropsMap)
 
 const updateCompRefList = (el: ComponentPublicInstance | null, component: ComponentData) => {
   if (el === null) {
@@ -78,21 +79,9 @@ const updateCompRefList = (el: ComponentPublicInstance | null, component: Compon
 for (const component of components) {
   componentPropsMap.value[component.id] = component.setting
   const cd = getComponentDefById(component.id)
-  _keys(cd?.settings || {}).forEach((key: string) => {
+  _keys(cd?.props || {}).forEach((key: string) => {
     _set(vOnUpdateMap, `${component.id}.update:${key}`, (val: any) => componentPropsMap.value[component.id][key] = val)
   })
-}
-
-/**
- * 合并普通的事件和 update:xxx 事件
- *
- * @param id
- */
-const getVOn = (id: string) => {
-  return {
-    ...(vOnMap[id] || {}),
-    ...(vOnUpdateMap[id] || {}),
-  }
 }
 
 const initEventFlow = () => {
@@ -173,24 +162,12 @@ onMounted(() => {
     <template #content>
       <div class="content-1">
         <div class="content-2">
-          <div
+          <BComponent
             v-for="component in components"
             :key="component.id"
-            class="component"
-            :style="{
-              width: `${component.width || (MIN_WIDTH_UNIT * GRID_WIDTH)}px`,
-              height: `${component.height || (MIN_HEIGHT_UNIT * GRID_HEIGHT)}px`,
-              left: `${component.left}px`,
-              top: `${component.top}px`,
-            }"
-          >
-            <component
-              :is="component.componentName"
-              :ref="(el: ComponentPublicInstance | null) => updateCompRefList(el, component)"
-              v-bind="componentPropsMap[component.id]"
-              v-on="getVOn(component.id)"
-            />
-          </div>
+            :component="component"
+            @mount="(el: ComponentPublicInstance | null) => updateCompRefList(el, component)"
+          />
         </div>
       </div>
     </template>
@@ -198,10 +175,4 @@ onMounted(() => {
 </template>
 
 <style scoped lang="less">
-.component {
-  box-sizing: border-box;
-  position: absolute;
-  padding: 4px;
-  border-radius: 2px;
-}
 </style>

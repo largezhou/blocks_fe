@@ -9,6 +9,7 @@ import BTimeout from '@/components/b-components/timeout/BTimeout.vue'
 import BContent from '@/components/b-components/content/BContent.vue'
 import BAssign from '@/components/b-components/assign/BAssign.vue'
 import BRequest from '@/components/b-components/request/BRequest.vue'
+import BModal from '@/components/b-components/modal/BModal.vue'
 import { ComponentDefinition } from '@/types/vue'
 import { App } from 'vue'
 import _groupBy from 'lodash/groupBy'
@@ -23,6 +24,7 @@ export const componentMap: KeyValue<ComponentDefinition | undefined> = {
   BContent,
   BAssign,
   BRequest,
+  BModal,
 }
 
 export const components: ComponentDefinition[] = Object.values(componentMap as KeyValue<ComponentDefinition>)
