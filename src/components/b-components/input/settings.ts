@@ -1,6 +1,7 @@
 import { ComponentPropsSettings } from '@/components/b-components/types'
 import { EventSetting } from '@/components/event-editor/types'
 import { AssignValueFlow, AssignValueType } from '@/libs/consts'
+import { hiddenActions, hiddenSettings } from '@/libs/utils'
 
 export const settings: ComponentPropsSettings = {
   label: {
@@ -28,6 +29,7 @@ export const settings: ComponentPropsSettings = {
     componentName: 'AInput',
     value: '请输入...',
   },
+  ...hiddenSettings(),
   allowClear: {
     label: '是否可清除',
     componentName: 'ACheckbox',
@@ -44,6 +46,7 @@ export const settings: ComponentPropsSettings = {
 
 export const eventSetting: EventSetting = {
   action: {
+    ...hiddenActions(),
     clear: {
       showName: '清空值',
       method: 'clear',

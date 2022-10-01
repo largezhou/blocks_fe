@@ -9,7 +9,8 @@ export default defineComponent({
 <script setup lang="ts">
 import BSvgIcon from '@/components/svg-icon/BSvgIcon.vue'
 import { ComponentData } from '@/components/page-editor/types'
-import { componentHasUi, componentMap } from '@/components/b-components'
+import { componentMap } from '@/components/b-components'
+import { componentHasUi } from '@/libs/utils'
 import { GRID_WIDTH, GRID_HEIGHT, MIN_HEIGHT_UNIT, MIN_WIDTH_UNIT } from '@/libs/consts'
 import BComponentNotExists from '@/components/b-components/component-not-exists/BComponentNotExists.vue'
 import { CloseCircleFilled } from '@ant-design/icons-vue'
@@ -30,6 +31,9 @@ const cd = componentMap[props.data.componentName]
 // 当组件不存在时，使用 BComponentNotExists 展示，没有任何功能
 const componentName = cd?.name || BComponentNotExists.name
 const hasUI = cd ? componentHasUi(props.data) : true
+const isHidden = computed<boolean>(() => {
+  return !!props.data.setting.hidden
+})
 
 const spaceStyles = computed(() => {
   const d = props.data as ComponentData
@@ -60,7 +64,7 @@ const onStartMove = (e: MouseEvent) => {
     class="component"
     :class="{
       selected: isSelected,
-      hidden: false,
+      hidden: isHidden,
     }"
     :style="spaceStyles"
     @mousedown.stop="onStartMove"

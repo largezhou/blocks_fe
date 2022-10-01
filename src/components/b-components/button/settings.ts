@@ -1,5 +1,6 @@
 import { ComponentPropsSettings } from '@/components/b-components/types'
 import { EventSetting } from '@/components/event-editor/types'
+import { hiddenActions, hiddenSettings } from '@/libs/utils'
 
 export const settings: ComponentPropsSettings = {
   text: {
@@ -28,6 +29,7 @@ export const settings: ComponentPropsSettings = {
       ],
     },
   },
+  ...hiddenSettings(),
   danger: {
     label: '设置为危险按钮',
     componentName: 'ACheckbox',
@@ -44,6 +46,7 @@ export const settings: ComponentPropsSettings = {
 
 export const eventSetting: EventSetting = {
   action: {
+    ...hiddenActions(),
     changeDisabledToTrue: {
       showName: '设置为禁用',
       prop: 'disabled',

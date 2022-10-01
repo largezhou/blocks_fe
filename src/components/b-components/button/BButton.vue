@@ -15,18 +15,22 @@ export default defineComponent({
 </script>
 
 <script setup lang="ts">
+import { valueForEditMode } from '@/components/editor/useEditMode'
+
 withDefaults(
   defineProps<{
     text?: string,
     type?: 'primary' | 'text' | 'default',
     danger?: boolean,
     disabled?: boolean,
+    hidden?: boolean,
   }>(),
   {
     text: '按钮',
     type: 'primary',
     danger: false,
     disabled: false,
+    hidden: false,
   },
 )
 
@@ -41,6 +45,7 @@ const onClick = (e: MouseEvent) => {
 
 <template>
   <AButton
+    v-show="valueForEditMode(true, !hidden)"
     class="b-button"
     :type="type"
     :danger="danger"

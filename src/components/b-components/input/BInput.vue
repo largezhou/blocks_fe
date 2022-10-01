@@ -15,6 +15,8 @@ export default defineComponent({
 </script>
 
 <script setup lang="ts">
+import { valueForEditMode } from '@/components/editor/useEditMode'
+
 const props = withDefaults(
   defineProps<{
     label?: string,
@@ -24,6 +26,7 @@ const props = withDefaults(
     placeholder?: string,
     allowClear?: boolean,
     disabled?: boolean,
+    hidden?: boolean,
   }>(),
   {
     label: '输入框',
@@ -33,6 +36,7 @@ const props = withDefaults(
     placeholder: '请输入...',
     allowClear: true,
     disabled: false,
+    hidden: false,
   },
 )
 
@@ -58,7 +62,7 @@ defineExpose({
 </script>
 
 <template>
-  <div class="b-input ant-form ant-form-vertical">
+  <div v-show="valueForEditMode(true, !hidden)" class="b-input ant-form ant-form-vertical">
     <AFormItem :label="label" :extra="extra">
       <AInput
         :value="value"

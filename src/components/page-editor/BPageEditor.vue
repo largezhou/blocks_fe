@@ -7,7 +7,8 @@ export default defineComponent({
 </script>
 
 <script setup lang="ts">
-import { groupComponents, componentMap, componentHasUi } from '@/components/b-components'
+import { groupComponents, componentMap } from '@/components/b-components'
+import { componentHasUi } from '@/libs/utils'
 import BSvgIcon from '@/components/svg-icon/BSvgIcon.vue'
 import { useEventListener } from '@/hooks/common'
 import { Position, ComponentData, Space } from '@/components/page-editor/types'

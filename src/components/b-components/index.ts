@@ -12,7 +12,6 @@ import BRequest from '@/components/b-components/request/BRequest.vue'
 import { ComponentDefinition } from '@/types/vue'
 import { App } from 'vue'
 import _groupBy from 'lodash/groupBy'
-import { ComponentData } from '@/components/page-editor/types'
 import BComponentNotExists from '@/components/b-components/component-not-exists/BComponentNotExists.vue'
 import { KeyValue } from '@/types/common'
 
@@ -27,15 +26,6 @@ export const componentMap: KeyValue<ComponentDefinition | undefined> = {
 }
 
 export const components: ComponentDefinition[] = Object.values(componentMap as KeyValue<ComponentDefinition>)
-
-/**
- * 有长宽的，属于 UI 组件，会在页面上显示出来
- *
- * @param data 组件配置数据
- */
-export const componentHasUi = (data: ComponentData): boolean => {
-  return data.width > 0 && data.height > 0
-}
 
 /**
  * 按分类分组后的组件
