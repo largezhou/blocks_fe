@@ -32,8 +32,8 @@ interface DataSource {
 }
 
 const props = defineProps<{
-  in?: DataSource,
-  out?: DataSource,
+  in?: DataSource
+  out?: DataSource
 }>()
 
 const compRefMap = inject<Ref<KeyValue<ComponentPublicInstance | undefined>>>('compRefMap')

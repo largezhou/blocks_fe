@@ -8,7 +8,7 @@ export default defineComponent({
 
 <script setup lang="ts">
 const props = defineProps<{
-  name: string,
+  name: string
 }>()
 const symbolId = computed(() => `#icon-${props.name}`)
 </script>

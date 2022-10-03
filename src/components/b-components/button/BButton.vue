@@ -19,11 +19,11 @@ import { valueForEditMode } from '@/components/editor/useEditMode'
 
 withDefaults(
   defineProps<{
-    text?: string,
-    type?: 'primary' | 'text' | 'default',
-    danger?: boolean,
-    disabled?: boolean,
-    hidden?: boolean,
+    text?: string
+    type?: 'primary' | 'text' | 'default'
+    danger?: boolean
+    disabled?: boolean
+    hidden?: boolean
   }>(),
   {
     text: '按钮',

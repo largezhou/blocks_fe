@@ -48,5 +48,22 @@ module.exports = {
     'vue/valid-template-root': 'off',
     'quote-props': ['error', 'as-needed'],
     quotes: ['error', 'single'],
+    '@typescript-eslint/member-delimiter-style': [
+      'error',
+      {
+        multiline: {
+          delimiter: 'none',
+        },
+        singleline: {
+          delimiter: 'comma',
+        },
+      },
+    ],
+    'object-curly-spacing': ['error', 'always'],
+    'keyword-spacing': ['error'],
+    'space-before-blocks': ['error', 'always'],
+    'space-infix-ops': ['error', { int32Hint: true }],
+    'arrow-spacing': ['error'],
+    indent: ['error', 2],
   },
 }

@@ -18,7 +18,7 @@ export type Space = Position & Size
 // 页面上组件的配置信息，持久化用
 export type ComponentData = {
   // 已使用组件的展示名
-  showName: string,
+  showName: string
   // 组件名
   componentName: string
   // 唯一 ID

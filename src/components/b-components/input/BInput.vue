@@ -19,14 +19,14 @@ import { valueForEditMode } from '@/components/editor/useEditMode'
 
 const props = withDefaults(
   defineProps<{
-    label?: string,
-    name?: string,
-    value?: any,
-    extra?: string,
-    placeholder?: string,
-    allowClear?: boolean,
-    disabled?: boolean,
-    hidden?: boolean,
+    label?: string
+    name?: string
+    value?: any
+    extra?: string
+    placeholder?: string
+    allowClear?: boolean
+    disabled?: boolean
+    hidden?: boolean
   }>(),
   {
     label: '输入框',

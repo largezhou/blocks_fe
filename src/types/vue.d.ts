@@ -8,7 +8,7 @@ declare module '@vue/runtime-core' {
      * 组件展示的名称
      * 编辑器上的组件必填
      */
-    showName?: string,
+    showName?: string
     /**
      * 组件占用的最小宽度单元
      * 编辑器上的组件必填，非 UI 组件填 0

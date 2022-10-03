@@ -26,7 +26,7 @@ const props = withDefaults(
     successCode?: any
     showMessage?: boolean
     method?: 'POST' | 'GET' | 'DELETE' | 'PATCH' | 'PUT'
-    confirm?: boolean,
+    confirm?: boolean
   }>(),
   {
     messageKey: 'message',
