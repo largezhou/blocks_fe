@@ -79,6 +79,7 @@ const onUpdateVisible = (val: boolean) => {
   height: 100%;
   box-shadow: none;
   background-color: #f0f2f5;
+  border: 1px solid #d9d9d9;
 }
 </style>
 
