@@ -65,7 +65,9 @@ const onStartMove = (e: MouseEvent) => {
     :class="{
       selected: isSelected,
       hidden: isHidden,
+      'is-container': cd?.isContainer,
     }"
+    :data-id="data.id"
     :style="spaceStyles"
     @mousedown.stop="onStartMove"
   >
@@ -107,6 +109,7 @@ const onStartMove = (e: MouseEvent) => {
   &.selected {
     border: @selected-border #bae7ff solid;
     padding: @selected-padding;
+    z-index: 9999;
 
     .resizer {
       display: block;

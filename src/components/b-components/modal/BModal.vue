@@ -9,6 +9,7 @@ export default defineComponent({
   minHeightUnit: 6,
   icon: 'modal',
   category: '弹框',
+  isContainer: true,
   settings,
   eventSetting,
 })
@@ -73,6 +74,7 @@ const onUpdateVisible = (val: boolean) => {
 <style scoped lang="less">
 .ant-modal-body {
   padding: 0;
+  position: relative;
 }
 
 .ant-modal-content {
